@@ -6,6 +6,8 @@ Created by [Jack Wei Lun Shi](https://jackswl.github.io/)\*, [Wawan Solihin](htt
 
 This repository contains BIM-JEPA implementation for __BIM-JEPA: Self-supervised learning for BIM element classification using a joint embedding predictive architecture__ (Under Review).
 
+BIM-JEPA is a pre-trained model for self-supervised geometry-based representation learning in the AEC domain, designed to classify Building Information Modeling (BIM) elements ...
+
 All training code and weights will be released upon acceptance of the paper.
 
 ## Pretrained Models
@@ -18,7 +20,7 @@ More details will be released upon acceptance of paper.
 - python == 3.11
 - CUDA >= 12.1
 - torchvision
-- pytorch3D
+- PyTorch3D
 
 ### Conda Installation
 #### Option A

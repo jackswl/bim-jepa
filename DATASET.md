@@ -1,4 +1,7 @@
-## Dataset 
+## Dataset
+
+Note: Dataset scripts will be released upon acceptance of paper.
+
 The overall directory structure should be:
 
 ```
