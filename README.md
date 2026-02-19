@@ -23,8 +23,7 @@ More details will be released upon acceptance of paper.
 - PyTorch3D
 
 ### Conda Installation
-#### Option A
-Create environment:
+Option A -> Create environment:
 ```
 conda create -n bimjepa \
     python=3.11 \
@@ -34,7 +33,7 @@ conda create -n bimjepa \
     cudatoolkit \
     -c pytorch -c nvidia -y
 ```
-After that, install pytorch3D (https://github.com/facebookresearch/pytorch3d):
+After that, install PyTorch3D (https://github.com/facebookresearch/pytorch3d):
 ```
 export FORCE_CUDA=1
 conda install pytorch3d::pytorch3d
@@ -43,8 +42,8 @@ Finally, install the remaining miscellaneous/visualization packages:
 ```
 pip install transformers accelerate "pytorch-lightning>=2.0" "jsonargparse[signatures]" trimesh scikit-learn h5py matplotlib wandb timm lightning-bolts fvcore pandas seaborn plotly
 ```
-#### Option B (recommendated)
-You can also simply create conda environment using:
+
+Option B (Recommended) -> You can create conda environment using:
 ```
 conda env create -f environment.yml
 conda activate bimjepa
@@ -62,3 +61,6 @@ If you find our work useful in your research, please consider citing:
 ```
 in progress
 ```
+
+## Acknowledgements
+We sincerely thank the authors of Point-JEPA, SpaRSE-BIM/IFCNet, and BIMGEOM for making their code and models publicly available, which served as the foundation for this work. If you use our work, please also consider citing these papers.
