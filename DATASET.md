@@ -34,7 +34,7 @@ IFC_extracted_elements_dataset_part_3/
 ├──......
 ```
 
-**IFCNet:** We pre-trained the model on the IFCNet data, but explicitly removed the testing split in IFCNetCore from IFCNet, as it is used in the downstream classification task. The IFCNet (given in IFC format) and IFCNetCore (given in both IFC and OBJ format) data can be downloaded at [[GitHub]](https://github.com/RWTH-E3D/ifcnet-models) or [[ifcnet.e3d.rwth-aachen.de)]](https://ifcnet.e3d.rwth-aachen.de/). The directory structure looks like this:
+**IFCNet:** We pre-trained the model on the IFCNet data, but explicitly removed the testing split in IFCNetCore from IFCNet, as it is used in the downstream classification task. The IFCNet (given in IFC format) and IFCNetCore (given in both IFC and OBJ format) data can be downloaded at [[GitHub]](https://github.com/RWTH-E3D/ifcnet-models) or [[ifcnet.e3d.rwth-aachen.de]](https://ifcnet.e3d.rwth-aachen.de/). The directory structure looks like this:
 
 ```
 │IFCNet/
@@ -50,7 +50,7 @@ IFC_extracted_elements_dataset_part_3/
 │  ├── ......
 ```
 
-**IFCNetCore:** IFCNetCore is a subset of IFCNet. IFCNetCore can be similarly downloaded at [[GitHub]](https://github.com/RWTH-E3D/ifcnet-models) or [[ifcnet.e3d.rwth-aachen.de)]](https://ifcnet.e3d.rwth-aachen.de/). The directory structure looks like this:
+**IFCNetCore:** IFCNetCore is a subset of IFCNet. IFCNetCore can be similarly downloaded at [[GitHub]](https://github.com/RWTH-E3D/ifcnet-models) or [[ifcnet.e3d.rwth-aachen.de]](https://ifcnet.e3d.rwth-aachen.de/). The directory structure looks like this:
 
 ```
 │IFCNetCore/
