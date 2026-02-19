@@ -1,6 +1,6 @@
 ## Dataset
 
-Note: Dataset scripts will be released upon acceptance of paper.
+Note: More dataset scripts will be released upon acceptance of paper.
 
 The overall directory structure should be:
 
@@ -49,6 +49,8 @@ IFC_extracted_elements_dataset_part_3/
 ├──IfcWindow/
 │  ├── ......
 ```
+
+**IFCNetCore:** IFCNetCore is a subset of IFCNet. IFCNetCore can be similarly downloaded at [[GitHub]](https://github.com/RWTH-E3D/ifcnet-models) or [[ifcnet.e3d.rwth-aachen.de)]](https://ifcnet.e3d.rwth-aachen.de/). The directory structure looks like this:
 
 ```
 │IFCNetCore/
