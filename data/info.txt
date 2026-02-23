@@ -1,0 +1,2 @@
+Refer to DATASET.md to download raw data
+Next, please run the data_convert.ipynb in full
