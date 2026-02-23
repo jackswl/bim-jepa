@@ -1,8 +1,8 @@
 ## Dataset
 
-Note: More dataset scripts will be released upon acceptance of paper.
+For pre-processed datasets, please refer to the bottom text of DATASET.md file. (Note: after downloading all the raw datasets, run the data_convert.ipynb to convert all raw data into NPY point clouds)
 
-The overall directory structure should be:
+The overall directory structure after downloading the raw data should be:
 
 ```
 │BIM-JEPA/
@@ -18,7 +18,9 @@ The overall directory structure should be:
 │   ├──....../
 ├──......
 ```
+
 **IFC_extracted_elements_dataset_part_x:** We denote this as IFC-884K in the manuscript. You can download the raw IFC-884K data from [[Zenodo]](https://zenodo.org/records/10730758). Each data part contains individual building element in OBJ format. For part 1 dataset, there are 9991 files that are named with a wrong file extension (e.g., 074508_IfcOpeningElement.ifc).obj' -- should be --> '074508_IfcOpeningElement.obj'). The directory structure looks like this:
+
 ```
 │IFC_extracted_elements_dataset_part_1/
 ├──000001_IfcDoor.obj
@@ -87,3 +89,16 @@ IFC_extracted_elements_dataset_part_3/
 │  │  ├──....../
 ├──.../
 ```
+
+---
+
+### Pre-processed datasets
+
+Now, after downloading all the raw datasets into the data folder, simply run the data_convert.ipynb script to pre-process all the raw datasets into point clouds (.npy format).
+
+#### For pre-training of BIM-JEPA, it consists of all these pre-processed files:
+    data/IFC_extracted_elements_dataset_part_1_pointclouds_4096
+    data/IFC_extracted_elements_dataset_part_2_pointclouds_4096
+    data/IFC_extracted_elements_dataset_part_3_pointclouds_4096
+    data/IFCNet_NO_TEST_pointclouds_4096
+    data/processed_BIMGEOM_NO_TEST_pointclouds_4096
