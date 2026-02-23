@@ -10,7 +10,7 @@ BIM-JEPA is a pre-trained model for self-supervised geometry-based representatio
 
 All training code and weights will be released upon acceptance of the paper.
 
-## Pretrained Models
+## Pre-trained Models
 More details will be released upon acceptance of paper.
 
 ## Usage
