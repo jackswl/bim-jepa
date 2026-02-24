@@ -2,7 +2,7 @@
 
 Created by [Jack Wei Lun Shi](https://jackswl.github.io/)\*, [Wawan Solihin](https://cde.nus.edu.sg/cee/staff/wawan-solihin/), Yufeng Weng, [Yimin Zhao](https://ztony0712.github.io/), [Leong Hien Poh](https://scholar.google.com/citations?user=TN8uDQoAAAAJ&hl=en&authuser=1), [Justin K.W. Yeoh](https://scholar.google.com/citations?user=m9LF49sAAAAJ&hl=en)
 
-[[Automation in Construction]](https://jackswl.github.io/bim-jepa/) [[Project Page]](https://jackswl.github.io/bim-jepa/) [[Model Weights In Progress]](#pretrained-models)
+[[Automation in Construction]](https://jackswl.github.io/bim-jepa/) [[Project Page]](https://jackswl.github.io/bim-jepa/) [[Model Weights]](#pretrained-models)
 
 This repository contains BIM-JEPA implementation for __BIM-JEPA: Self-supervised learning for BIM element classification using a joint embedding predictive architecture__ (Under Review).
 
@@ -10,7 +10,7 @@ BIM-JEPA is a pre-trained model for self-supervised geometry-based representatio
 
 All training code and weights will be released upon acceptance of the paper.
 
-## Pre-trained / Fine-tuned Models
+## <a id="pretrained-models"></a>Pre-trained / Fine-tuned Models
 
 All model weights are available on HuggingFace.
 
