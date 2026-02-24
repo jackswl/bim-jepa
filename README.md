@@ -11,6 +11,9 @@ BIM-JEPA is a pre-trained model for self-supervised geometry-based representatio
 All training code and weights will be released upon acceptance of the paper.
 
 ## Pre-trained / Fine-tuned Models
+
+All model weights are available on HuggingFace.
+
 |model| dataset | config | url|
 | :---: | :---: | :---: |  :---: | 
 |BIM-JEPA-pretrained| IFC-884; IFCNet; BIMGEOM |  [config](BIM-JEPA/configs/BIM-JEPA/pretraining/combined_pretrain_original.yaml)|  [HuggingFace](https://huggingface.co/llama2thedog/BIM-JEPA-pretrained)|
@@ -31,7 +34,13 @@ All training code and weights will be released upon acceptance of the paper.
 - PyTorch3D
 
 ### Conda Installation
-Option A -> Create environment:
+Option A (Recommended) -> You can create conda environment using:
+```
+conda env create -f environment.yml
+conda activate bimjepa
+```
+
+Option B -> Create environment:
 ```
 conda create -n bimjepa \
     python=3.11 \
