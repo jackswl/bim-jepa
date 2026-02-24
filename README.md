@@ -60,12 +60,6 @@ Finally, install the remaining miscellaneous/visualization packages:
 pip install transformers accelerate "pytorch-lightning>=2.0" "jsonargparse[signatures]" trimesh scikit-learn h5py matplotlib wandb timm lightning-bolts fvcore pandas seaborn plotly
 ```
 
-Option B (Recommended) -> You can create conda environment using:
-```
-conda env create -f environment.yml
-conda activate bimjepa
-```
-
 ### Dataset
 The details of raw datasets can be found in [DATASET.md](./DATASET.md). More details for datasets will be released upon acceptance of paper.
 
