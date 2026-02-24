@@ -1,0 +1,29 @@
+#!/bin/bash
+
+#PBS -l select=1:ngpus=1
+#PBS -l walltime=24:00:00
+#PBS -j oe
+#PBS -P personal-e1291616
+#PBS -q normal
+#PBS -N gpuJob
+
+cd $PBS_O_WORKDIR || exit $?
+[ -d log ] || mkdir log
+
+mkdir /tmp/.cache
+
+module load miniforge3
+conda activate bimjepa
+
+{
+    # Check that the correct Conda environment is active
+    echo "Active Conda Environment:"
+    conda info --envs
+
+    python run_n_shot_bimgeom.py \
+        --config configs/BIM-JEPA/classification/bimgeom_n_shot.yaml \
+        --artifacts_root /home/users/nus/e1291616/jepa/artifacts \
+        --n_shots "140,100,50,25,10,5" \
+        --seeds "42,1337,2026,3407,3105"
+
+} > out.$PBS_JOBID 2> err.$PBS_JOBID

@@ -1,0 +1,28 @@
+#!/bin/bash
+
+#PBS -l select=1:ngpus=1
+#PBS -l walltime=4:00:00
+#PBS -j oe
+#PBS -P personal-e1291616
+#PBS -q normal
+#PBS -N gpuJob
+
+cd $PBS_O_WORKDIR || exit $?
+[ -d log ] || mkdir log
+
+mkdir /tmp/.cache
+
+module load miniforge3
+conda activate bimjepa
+
+{
+    # Check that the correct Conda environment is active
+    echo "Active Conda Environment:"
+    conda info --envs
+    # THIS PBS IS FOR IFCNETCORE
+    # Run the Python script
+    # Navigate to BIM-JEPA root to find the bimjepa module properly
+    cd ../.. || exit 1
+    python -m bimjepa.tasks.classification fit -c configs/BIM-JEPA/classification/ifcnet_classification.yaml
+
+} > out.$PBS_JOBID 2> err.$PBS_JOBID

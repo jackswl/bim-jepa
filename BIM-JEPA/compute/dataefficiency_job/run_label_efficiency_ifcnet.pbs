@@ -1,0 +1,29 @@
+#!/bin/bash
+
+#PBS -l select=1:ngpus=1
+#PBS -l walltime=24:00:00
+#PBS -j oe
+#PBS -P personal-e1291616
+#PBS -q normal
+#PBS -N gpuJob
+
+cd $PBS_O_WORKDIR || exit $?
+[ -d log ] || mkdir log
+
+mkdir /tmp/.cache
+
+module load miniforge3
+conda activate bimjepa
+
+{
+    # Check that the correct Conda environment is active
+    echo "Active Conda Environment:"
+    conda info --envs
+
+    python run_label_efficiency_ifcnet.py \
+        --config configs/BIM-JEPA/classification/ifcnet_label_efficiency.yaml \
+        --artifacts_root /home/users/nus/e1291616/jepa/artifacts \
+        --fractions "1.00,0.75,0.50,0.25,0.10,0.05,0.01" \
+        --seeds "42,1337,2026,3407,3105"
+
+} > out.$PBS_JOBID 2> err.$PBS_JOBID

@@ -1,0 +1,31 @@
+#!/bin/bash
+
+#PBS -l select=1:ngpus=1
+#PBS -l walltime=1:00:00
+#PBS -j oe
+#PBS -P personal-e1291616
+#PBS -q normal
+#PBS -N gpuJob
+
+cd $PBS_O_WORKDIR || exit $?
+[ -d log ] || mkdir log
+
+mkdir /tmp/.cache
+
+module load miniforge3
+conda activate bimjepa
+
+{
+    # Check that the correct Conda environment is active
+    echo "Active Conda Environment:"
+    conda info --envs
+    # THIS PBS IS FOR BIMGEOM
+    # Run the Python script for testing !! NOTE! THIS SCRIPT SHOULD ONLY BE RUN ONCE! ONLY AFTER TUNING IS DONE !!
+    # UPDATED: Added --ckpt_path to load the final trained model
+    # Navigate to BIM-JEPA root to find the bimjepa module properly
+    cd ../.. || exit 1
+    python -m bimjepa.tasks.classification test \
+        -c configs/BIM-JEPA/classification/bimgeom_classification.yaml \
+        --ckpt_path /home/users/nus/e1291616/jepa/artifacts/lightning_logs/version_312/checkpoints/epoch=349-step=88550.ckpt
+
+} > out.$PBS_JOBID 2> err.$PBS_JOBID
