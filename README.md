@@ -13,12 +13,12 @@ All training code and weights will be released upon acceptance of the paper.
 ## Pre-trained / Fine-tuned Models
 |model| dataset | config | url|
 | :---: | :---: | :---: |  :---: | 
-|BIM-JEPA-pretrained| IFC-884; IFCNet; BIMGEOM |  [config](*)|  [HuggingFace](https://huggingface.co/llama2thedog/BIM-JEPA-pretrained)|
+|BIM-JEPA-pretrained| IFC-884; IFCNet; BIMGEOM |  [config](BIM-JEPA/configs/BIM-JEPA/pretraining/combined_pretrain_original.yaml)|  [HuggingFace](https://huggingface.co/llama2thedog/BIM-JEPA-pretrained)|
 
 |model| dataset  | Overall Acc | Mean Acc | config | url|
 | :---:| :---: | :---: |  :---: | :---: | :---: |
-|BIM-JEPA-IFCNetCore| IFCNetCore | 89.37 | 86.63 |  [config](*) | [HuggingFace](https://huggingface.co/llama2thedog/BIM-JEPA-finetuned-ifcnetcore) |
-|BIM-JEPA-BIMGEOM| BIMGEOM | 92.43 | 89.53 |[config](*) | [HuggingFace](https://huggingface.co/llama2thedog/BIM-JEPA-finetuned-bimgeom) |
+|BIM-JEPA-IFCNetCore| IFCNetCore | 89.37 | 86.63 |  [config](BIM-JEPA/configs/BIM-JEPA/classification/ifcnet_classification.yaml) | [HuggingFace](https://huggingface.co/llama2thedog/BIM-JEPA-finetuned-ifcnetcore) |
+|BIM-JEPA-BIMGEOM| BIMGEOM | 92.43 | 89.53 |[config](BIM-JEPA/configs/BIM-JEPA/classification/bimgeom_classification.yaml) | [HuggingFace](https://huggingface.co/llama2thedog/BIM-JEPA-finetuned-bimgeom) |
 
 
 ## Usage
