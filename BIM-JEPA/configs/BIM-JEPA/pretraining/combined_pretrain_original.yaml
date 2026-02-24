@@ -1,0 +1,109 @@
+seed_everything: 1
+trainer:
+  # from the __main__.py file
+  default_root_dir: "artifacts"
+  gradient_clip_val: 2
+  gradient_clip_algorithm: "norm"
+  log_every_n_steps: 10 # 10
+  strategy: "ddp_find_unused_parameters_true"
+  check_val_every_n_epoch: 100000 # i dont want to check this, too long
+  accelerator: "gpu"
+  devices: 4
+  num_sanity_val_steps: 0
+  sync_batchnorm: true
+  max_epochs: 500 # CHANGED: Reduced for a smaller dataset.
+  precision: "bf16-mixed"
+  callbacks:
+    - class_path: pytorch_lightning.callbacks.LearningRateMonitor # FROM __MAIN__.PY
+      init_args: # FROM __MAIN__.PY
+        logging_interval: "epoch" # FROM __MAIN__.PY
+    - class_path: bimjepa.callbacks.log_at_best_val.TrackLinearAccAtMinLossCallback # FROM __MAIN__.PY
+      init_args:
+        monitor_metric_name: "svm_val_acc_ifcnetcore_val" # <-- ADDED THIS svm_val_acc_{dataset_name}
+    - class_path: pytorch_lightning.callbacks.ModelCheckpoint
+      init_args:
+        every_n_epochs: 1      # <-- This is the crucial fix
+        save_last: true        # <-- This will now work as expected
+        save_top_k: 0
+model:
+  tokenizer_num_groups: 64
+  tokenizer_group_size: 32
+  tokenizer_group_radius: null
+  encoder_dim: 384
+  encoder_depth: 12
+  encoder_heads: 6
+  encoder_dropout: 0.1
+  encoder_attention_dropout: 0.05
+  encoder_drop_path_rate: 0.25
+  encoder_add_pos_at_every_layer: true
+  predictor_embed_dim: 192
+  predictor_depth: 6
+  predictor_heads: 6
+  predictor_mlp_ratio: 4.0
+  predictor_drop_out: 0.1
+  predictor_attention_dropout: 0.05
+  predictor_drop_path_rate: 0.25
+  predictor_add_target_pos: true
+  token_seq_method: iterative_nearest_min_start # iterative_nearest, iterative_nearest_min_start (FROM POINT-JEPA)
+  target_sample_method: contiguous # One of random or contiguous (FROM POINT-JEPA)
+  num_targets_per_sample: 4
+  target_sample_ratio: [0.15, 0.2]
+  context_sample_method: contiguous  # One of "contiguous", "random", "rest" (FROM POINT-JEPA)
+  context_sample_ratio: [0.4, 0.75]
+  target_layers: [11]
+  target_layer_part: final
+  target_layer_norm: layer
+  target_norm: null # Null bc there is only one target layer
+  ema_tau_min: 0.9995
+  ema_tau_max: 0.99999
+  ema_tau_epochs: 500 # CHANGED: Match new max_epochs
+  loss: smooth_l1
+  learning_rate: 1e-4
+  optimizer_adamw_weight_decay: 0.05
+  lr_scheduler_linear_warmup_epochs: 50 # 10%
+  lr_scheduler_linear_warmup_start_lr: 1e-5
+  lr_scheduler_cosine_eta_min: 1e-6
+  train_transformations:
+  # REMOVED "subsample" because our data is already processed to 4096 points
+  - "scale"
+  - "center"
+  - "unit_sphere"
+  - "rotate"
+  val_transformations:
+  # REMOVED "subsample"
+  - "center"
+  - "unit_sphere"
+  transformation_subsample_points: 4096
+  transformation_scale_min: 0.8
+  transformation_scale_max: 1.2
+  transformation_scale_symmetries: [1, 1, 0] # 1,0,1 previously for point-jepa, now change to 1,1,0
+  transformation_rotate_dims: [2] # rotation around z-axis since BIM objects are gravity-aligned.
+  transformation_rotate_degs: null
+  transformation_translate: 0.2
+  transformation_height_normalize_dim: 1
+  # svm_validation:
+  #   # CHANGED: Updated to validate on your IFCNetCore validation split
+  #   ifcnetcore_val:
+  #     class_path: bimjepa.datasets.ifcnetfull_datamodule.IFCFullDataModule
+  #     init_args:
+  #       data_dirs:
+  #         - data/IFC_extracted_elements_dataset_part_1_pointclouds_4096
+  #         # - data/IFC_extracted_elements_dataset_part_2_pointclouds_4096
+  #         # - data/IFC_extracted_elements_dataset_part_3_pointclouds_4096
+  #       batch_size: 1024
+  #       val_split_ratio: 0.3
+  #       seed: 42
+data:
+  # CHANGED: THIS IS FOR FULL DATASET EVERYTHING
+  class_path: bimjepa.datasets.combined_ifc_datamodule.CombinedIFCDataModule
+  init_args:
+    data_dirs:
+      - data/IFC_extracted_elements_dataset_part_1_pointclouds_4096
+      - data/IFC_extracted_elements_dataset_part_2_pointclouds_4096
+      - data/IFC_extracted_elements_dataset_part_3_pointclouds_4096
+      - data/IFCNet_NO_TEST_pointclouds_4096
+      - data/processed_BIMGEOM_NO_TEST_pointclouds_4096
+    batch_size: 512 # CHANGED: Reduced batch size for a smaller dataset
+    num_workers: 14
+    val_split_ratio: 0.0 # og 0.3 Use 30% of training data for validation, during training of full dataset set to 0.0
+    seed: 42

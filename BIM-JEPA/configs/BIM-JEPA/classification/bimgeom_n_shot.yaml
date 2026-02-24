@@ -1,0 +1,66 @@
+seed_everything: 42
+
+trainer:
+  sync_batchnorm: true
+  max_epochs: 100
+  precision: "32-true"
+  gradient_clip_algorithm: norm
+  gradient_clip_val: 10
+
+model:
+  # --- Architecture parameters MUST match pre-training ---
+  num_points: 4096
+  tokenizer_num_groups: 64
+  tokenizer_group_size: 32
+  tokenizer_group_radius: null
+  encoder_dim: 384
+  encoder_depth: 12
+  encoder_heads: 6
+  encoder_drop_path_rate: 0.2
+  encoder_add_pos_at_every_layer: true
+
+  # --- Fine-tuning specific parameters ---
+  pretrained_ckpt_path: /home/users/nus/e1291616/jepa/artifacts/lightning_logs/version_309/checkpoints/last.ckpt
+  encoder_unfreeze_epoch: 10000
+
+  # --- Classification Head ---
+  cls_head: mlp
+  cls_head_dim: 256
+  cls_head_dropout: 0.5
+  cls_head_pooling: mean+max
+
+  # --- Optimization ---
+  loss_label_smoothing: 0.1
+  learning_rate: 0.001
+  encoder_learning_rate: 0.0001
+  optimizer_adamw_weight_decay: 0.05
+  lr_scheduler_linear_warmup_epochs: 1
+  lr_scheduler_linear_warmup_start_lr: 0.001
+  lr_scheduler_cosine_eta_min: 0.001
+
+  # --- Augmentations ---
+  train_transformations:
+  - "scale"
+  - "center"
+  - "unit_sphere"
+  val_transformations:
+  - "center"
+  - "unit_sphere"
+  transformation_scale_min: 0.6
+  transformation_scale_max: 1.4
+  transformation_rotate_dims: [0, 1, 2]
+  transformation_translate: 0.2
+
+data:
+  # MODIFIED: Point to the new n-shot datamodule
+  class_path: bimjepa.datasets.bimgeom_datamodule_n_shot.BIMGEOMDataModuleNShot
+  init_args:
+    data_dir: data/processed_BIMGEOM_pointclouds_4096
+    batch_size: 16
+    num_workers: 8
+    val_split_ratio: 0.0
+    seed: 42
+
+    # MODIFIED: Use samples_per_class for n-shot (overridden by runner script)
+    samples_per_class: 50
+    subset_seed: 42

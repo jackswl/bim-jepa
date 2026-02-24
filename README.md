@@ -10,8 +10,16 @@ BIM-JEPA is a pre-trained model for self-supervised geometry-based representatio
 
 All training code and weights will be released upon acceptance of the paper.
 
-## Pre-trained Models
-More details will be released upon acceptance of paper.
+## Pre-trained / Fine-tuned Models
+|model| dataset | config | url|
+| :---: | :---: | :---: |  :---: | 
+|BIM-JEPA-pretrained| IFC-884; IFCNet; BIMGEOM |  [config](*)|  [HuggingFace](https://huggingface.co/llama2thedog/BIM-JEPA-pretrained)|
+
+|model| dataset  | Overall Acc | Mean Acc | config | url|
+| :---:| :---: | :---: |  :---: | :---: | :---: |
+|BIM-JEPA-IFCNetCore| IFCNetCore | 89.37 | 86.63 |  [config](*) | [HuggingFace](https://huggingface.co/llama2thedog/BIM-JEPA-finetuned-ifcnetcore) |
+|BIM-JEPA-BIMGEOM| BIMGEOM | 92.43 | 89.53 |[config](*) | [HuggingFace](https://huggingface.co/llama2thedog/BIM-JEPA-finetuned-bimgeom) |
+
 
 ## Usage
 
@@ -63,4 +71,4 @@ in progress
 ```
 
 ## Acknowledgements
-We sincerely thank the authors of Point-JEPA, SpaRSE-BIM/IFCNet, and BIMGEOM for making their code and models publicly available, which served as the foundation for this work. If you use our work, please also consider citing these papers.
+We sincerely thank the authors of BIM-JEPA, SpaRSE-BIM/IFCNet, and BIMGEOM for making their code and models publicly available, which served as the foundation for this work. If you use our work, please also consider citing these papers.
