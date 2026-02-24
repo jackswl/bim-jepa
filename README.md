@@ -61,7 +61,7 @@ pip install transformers accelerate "pytorch-lightning>=2.0" "jsonargparse[signa
 ```
 
 ### Dataset
-The details of raw datasets can be found in [DATASET.md](./DATASET.md). More details for datasets will be released upon acceptance of paper.
+The details of raw data can be found in [DATASET.md](./DATASET.md). After downloading the raw data, please run [data_convert.ipynb](./data_convert.ipynb) to convert all raw data into NPY point clouds.
 
 
 ## License
