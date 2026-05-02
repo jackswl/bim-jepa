@@ -1,4 +1,4 @@
-# BIM-JEPA: Self-supervised learning for BIM element classification using a joint embedding predictive architecture
+# Self-supervised learning for BIM element classification using a joint embedding predictive architecture
 
 Created by [Jack Wei Lun Shi](https://jackswl.github.io/)\*, [Wawan Solihin](https://cde.nus.edu.sg/cee/staff/wawan-solihin/), Yufeng Weng, [Yimin Zhao](https://ztony0712.github.io/), [Leong Hien Poh](https://scholar.google.com/citations?user=xZ3x56EAAAAJ&hl=en), [Justin K.W. Yeoh](https://scholar.google.com/citations?user=m9LF49sAAAAJ&hl=en)
 
