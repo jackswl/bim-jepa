@@ -117,4 +117,4 @@ in progress
 ```
 
 ## Acknowledgements
-We sincerely thank the authors of BIM-JEPA, SpaRSE-BIM/IFCNet, and BIMGEOM for making their code and models publicly available, which served as the foundation for this work. If you use our work, please also consider citing these papers.
+We sincerely thank the authors of Point-JEPA, SpaRSE-BIM/IFCNet, and BIMGEOM for making their code/data and models publicly available, which served as the foundation for this work. If you use our work, please also consider citing these papers.
