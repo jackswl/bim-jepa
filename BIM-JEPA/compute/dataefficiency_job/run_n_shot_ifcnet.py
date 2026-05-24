@@ -59,7 +59,7 @@ def run_cmd(cmd: List[str], env=None) -> Tuple[int, str, str]:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", type=str, default="configs/BIM-JEPA/classification/ifcnet_n_shot.yaml")
-    parser.add_argument("--artifacts_root", type=str, default="/home/users/nus/e1291616/jepa/artifacts")
+    parser.add_argument("--artifacts_root", type=str, default="/home/users/nus/xxxxxxxx/jepa/artifacts")
     parser.add_argument("--n_shots", type=str, default="36,30,25,10,5")
     parser.add_argument("--seeds", type=str, default="42,1337,2024")
     parser.add_argument("--dry_run", action="store_true")

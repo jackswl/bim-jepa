@@ -57,7 +57,7 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--config", type=str, default="configs/BIM-JEPA/classification/bimgeom_label_efficiency.yaml")
-    parser.add_argument("--artifacts_root", type=str, default="/home/users/nus/e1291616/jepa/artifacts")
+    parser.add_argument("--artifacts_root", type=str, default="/home/users/nus/xxxxxxxx/jepa/artifacts")
     parser.add_argument("--fractions", type=str, default="0.01,0.05,0.10,0.25,0.50,0.75,1.00")
     parser.add_argument("--seeds", type=str, default="42,1337,2024")
     parser.add_argument("--dry_run", action="store_true")

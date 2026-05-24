@@ -3,7 +3,7 @@
 #PBS -l select=1:ngpus=1
 #PBS -l walltime=24:00:00
 #PBS -j oe
-#PBS -P personal-e1291616
+#PBS -P personal-xxxxxxxx
 #PBS -q normal
 #PBS -N gpuJob
 
@@ -22,7 +22,7 @@ conda activate bimjepa
 
     python run_label_efficiency_bimgeom.py \
         --config configs/BIM-JEPA/classification/bimgeom_label_efficiency.yaml \
-        --artifacts_root /home/users/nus/e1291616/jepa/artifacts \
+        --artifacts_root /home/users/nus/xxxxxxxx/jepa/artifacts \
         --fractions "1.00,0.75,0.50,0.25,0.10,0.05,0.01" \
         --seeds "42,1337,2026,3407,3105"
 

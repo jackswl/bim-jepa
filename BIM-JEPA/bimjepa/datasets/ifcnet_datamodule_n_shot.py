@@ -1,4 +1,3 @@
-# bimjepa/datasets/ifcnet_datamodule_n_shot.py
 import os
 import random
 from typing import Optional, List, Dict, Tuple
@@ -45,14 +44,12 @@ class IFCNetCoreDataModuleNShot(pl.LightningDataModule):
         num_workers: int = 8,
         val_split_ratio: float = 0.0,
         seed: int = 42,
-        # New:
-        n_shot: Optional[int] = None, # e.g., 5 for 5-shot
+        n_shot: Optional[int] = None,
         subset_seed: Optional[int] = None,
     ):
         super().__init__()
         self.save_hyperparameters()
 
-        # Placeholders
         self.class_to_idx: Dict[str, int] = {}
         self.train_dataset: Optional[IFCNetCoreDataset] = None
         self.val_dataset: Optional[IFCNetCoreDataset] = None
@@ -67,12 +64,10 @@ class IFCNetCoreDataModuleNShot(pl.LightningDataModule):
         subset_seed = self.hparams.subset_seed if self.hparams.subset_seed is not None else self.hparams.seed
         rng = random.Random(subset_seed)
 
-        # Discover classes
         class_dirs = [d for d in os.listdir(data_dir) if os.path.isdir(os.path.join(data_dir, d))]
         class_dirs.sort()
         self.class_to_idx = {name: i for i, name in enumerate(class_dirs)}
 
-        # Collect files per class
         train_files_per_class: Dict[str, List[str]] = {}
         test_files: List[str] = []
 
@@ -91,25 +86,21 @@ class IFCNetCoreDataModuleNShot(pl.LightningDataModule):
                 files.sort()
                 test_files.extend(files)
 
-        # --- MODIFIED: Subset training files based on n_shot ---
         n_shot = self.hparams.n_shot
         selected_train_files: List[str] = []
 
         if n_shot is not None and n_shot > 0:
-            # N-shot sampling: sample N from each class
             for cname, files in train_files_per_class.items():
-                files = files[:]  # copy
+                files = files[:]
                 rng.shuffle(files)
-                # Take n_shot samples, or all available samples if fewer than n_shot
+                # take n_shot per class, or all if the class has fewer
                 k = min(n_shot, len(files))
                 selected_train_files.extend(files[:k])
         else:
-            # Fallback: use all training data if n_shot is not specified
             print("WARNING: n_shot not specified, using full training set.")
             for files in train_files_per_class.values():
                 selected_train_files.extend(files)
-        
-        # Optional: train/val split after subsetting
+
         if self.hparams.val_split_ratio > 0.0:
             def label_of(fp: str) -> int:
                 cname = os.path.basename(os.path.dirname(os.path.dirname(fp)))
@@ -130,7 +121,6 @@ class IFCNetCoreDataModuleNShot(pl.LightningDataModule):
         self.val_dataset = IFCNetCoreDataset(val_files, self.class_to_idx)
         self.test_dataset = IFCNetCoreDataset(test_files, self.class_to_idx)
 
-        # Summary
         print("IFCNetCoreDataModuleNShot setup complete:")
         print(f" - Found {len(self.class_to_idx)} classes.")
         print(f" - N-Shot value: {n_shot}")

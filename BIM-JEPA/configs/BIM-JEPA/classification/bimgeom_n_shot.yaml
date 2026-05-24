@@ -20,7 +20,7 @@ model:
   encoder_add_pos_at_every_layer: true
 
   # --- Fine-tuning specific parameters ---
-  pretrained_ckpt_path: /home/users/nus/e1291616/jepa/artifacts/lightning_logs/version_309/checkpoints/last.ckpt
+  pretrained_ckpt_path: pretrained/bim_jepa_pretrained.ckpt
   encoder_unfreeze_epoch: 10000
 
   # --- Classification Head ---
@@ -52,7 +52,6 @@ model:
   transformation_translate: 0.2
 
 data:
-  # MODIFIED: Point to the new n-shot datamodule
   class_path: bimjepa.datasets.bimgeom_datamodule_n_shot.BIMGEOMDataModuleNShot
   init_args:
     data_dir: data/processed_BIMGEOM_pointclouds_4096
@@ -61,6 +60,6 @@ data:
     val_split_ratio: 0.0
     seed: 42
 
-    # MODIFIED: Use samples_per_class for n-shot (overridden by runner script)
+    # the runner script overrides samples_per_class and subset_seed per n-shot run
     samples_per_class: 50
     subset_seed: 42

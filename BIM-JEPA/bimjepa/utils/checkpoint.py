@@ -1,11 +1,12 @@
 import torch
 
 
-def extract_model_checkpoint(path: str): # TODO: Fix this to self._device
+def extract_model_checkpoint(path: str):
+    # TODO: parameterize the map_location instead of hardcoding "cuda:0"
     checkpoint = torch.load(path, map_location="cuda:0")
 
     if "state_dict" in checkpoint:
-        # lightning checkpoint
+        # Lightning checkpoint: strip JEPA-specific prefixes so it loads into the classification model
         checkpoint = {
             k.replace("student.", "encoder.").replace(
                 "pos_embedding.", "positional_encoding."
@@ -34,6 +35,7 @@ def extract_model_checkpoint(path: str): # TODO: Fix this to self._device
                 if not k.startswith("module."):
                     del checkpoint["base_model"][k]
 
+        # remap Point-MAE / Point-BERT key naming to this codebase's module names
         checkpoint = {
             k
             # Point-MAE
@@ -50,7 +52,7 @@ def extract_model_checkpoint(path: str): # TODO: Fix this to self._device
             .replace("module.cls_token", "cls_token")
             .replace("module.cls_pos", "cls_pos")
             .replace("module.cls_head_finetune", "cls_head")
-            # finally
+            # finally strip the remaining `module.` prefix
             .replace("module.", ""): v
             for k, v in checkpoint["base_model"].items()
         }

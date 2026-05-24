@@ -5,8 +5,6 @@ import pytorch_lightning as pl
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-# from pl_bolts.optimizers.lr_scheduler import LinearWarmupCosineAnnealingLR
-# AFTER
 from torch.optim.lr_scheduler import CosineAnnealingLR, LinearLR, SequentialLR
 
 from pytorch_lightning.loggers import WandbLogger
@@ -86,8 +84,8 @@ class BimJepa(pl.LightningModule):
         transformation_translate: float = 0.2,
         transformation_height_normalize_dim: int = 1,
         svm_validation: Dict[str, pl.LightningDataModule] = {},
-        svm_validation_C=0.012,  # C=0.012 copied from Point-M2AE code
-        fix_estimated_stepping_batches: Optional[int] = None,  # multi GPU bug fix
+        svm_validation_C=0.012,  # C=0.012 follows Point-M2AE
+        fix_estimated_stepping_batches: Optional[int] = None,  # multi-GPU stepping-batch fix
         pretrained_ckpt_path: str | None = None,
     ) -> None:
         super().__init__()
@@ -221,41 +219,25 @@ class BimJepa(pl.LightningModule):
             update_every=1,
         )
 
-        # svm_validation: Dict[str, pl.LightningDataModule] = self.hparams.svm_validation  # type: ignore
-        # for dataset_name, datamodule in svm_validation.items():
-        #     datamodule.setup("fit")
-        #     for logger in self.loggers:
-        #         if isinstance(logger, WandbLogger):
-        #             logger.experiment.define_metric(
-        #                 f"svm_train_acc_{dataset_name}", summary="last,max"
-        #             )
-        #             logger.experiment.define_metric(
-        #                 f"svm_val_acc_{dataset_name}", summary="last,max"
-        #             )
-
+        # Instantiate each SVM-validation datamodule from its class_path/init_args config.
+        # We do this manually (rather than relying on Lightning) so the configs can stay
+        # plain dicts in the checkpoint and not be re-instantiated on load.
         svm_validation_configs: Dict = self.hparams.svm_validation  # type: ignore
-        self.svm_datamodules = {}  # Create a new attribute to store the instances
+        self.svm_datamodules = {}
 
-        # Loop through the configuration dictionaries to instantiate them
         for dataset_name, config in svm_validation_configs.items():
-            # Get the class path and arguments from the config dict
             class_path = config["class_path"]
             init_args = config["init_args"]
 
-            # Dynamically import the DataModule class from its path
             module_path, class_name = class_path.rsplit(".", 1)
             module = importlib.import_module(module_path)
             cls = getattr(module, class_name)
 
-            # Now, create the actual DataModule instance
             datamodule_instance = cls(**init_args)
-
-            # Call .setup() on the real object
             datamodule_instance.setup("fit")
 
             self.svm_datamodules[dataset_name] = datamodule_instance
-            
-            # The rest of your logger logic for defining metrics
+
             for logger in self.loggers:
                 if isinstance(logger, WandbLogger):
                     logger.experiment.define_metric(
@@ -270,15 +252,13 @@ class BimJepa(pl.LightningModule):
                 logger.watch(self)
 
     def on_fit_start(self) -> None:
-        # This is a bit of a hack. Device is only set properly after setup hook.
+        # device is only resolved after the setup hook runs, so push it into samplers here
         self.target_sampler.setup_device(self.device)
         self.context_sampler.setup_device(self.device)
         self.point_sequencer.setup_device(self.device)
 
     @torch.no_grad()
     def get_target_block(self, x, centers):
-        # x: (B, T, C)
-        # pos: (B, T, C)
         self.teacher.ema_model.eval()
         pos = self.positional_encoding(centers)
         embedded_global = self.generate_targets(x, pos)
@@ -316,20 +296,18 @@ class BimJepa(pl.LightningModule):
         return prediction_blocks, target_blocks
 
     def _perform_step(self, inputs: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
-        # inputs: (B, N, 3)
         tokens, centers = self.tokenizer(inputs)  # (B, T, C), (B, T, 3)
         tokens, centers = self.point_sequencer.reorder(tokens, centers)
         return self.forward(tokens, centers)
 
     def training_step(self, batch, batch_idx: int) -> torch.Tensor:
-        # inputs: (B, N, 3)
         points, _ = batch
         points = self.train_transformations(points)
         x, y = self._perform_step(points)
         loss = self.loss_func(x, y)
-        self.log("train_loss", loss, on_epoch=True, sync_dist=True) # added sync_dist=True for multi-gpu
-        self.log("train_pred_std", self.token_std(x))  # should always be > 0.01
-        self.log("train_target_std", self.token_std(y))  # should always be > 0.1
+        self.log("train_loss", loss, on_epoch=True, sync_dist=True)
+        self.log("train_pred_std", self.token_std(x))  # collapse check: should stay > 0.01
+        self.log("train_target_std", self.token_std(y))  # collapse check: should stay > 0.1
         return loss
 
     @torch.no_grad()
@@ -339,9 +317,9 @@ class BimJepa(pl.LightningModule):
         pos: torch.Tensor,
     ) -> torch.Tensor:
         """Same as point2vec, but if target_layer=last, layer_part=final, target_layer_norm=layer, target_norm=none,
-        then it should be the identical to IJEPA implementation, that is, teacher->take the final layer->layer norm.
+        then it should be identical to the IJEPA setup: teacher -> final layer -> layer norm.
         """
-        assert self.teacher.ema_model is not None  # always false
+        assert self.teacher.ema_model is not None
         self.teacher.ema_model.eval()
         jepa_target_layers: List[int] = self.hparams.target_layers  # type: ignore
         jepa_target_layer_part: str = self.hparams.target_layer_part  # type: ignore
@@ -390,7 +368,7 @@ class BimJepa(pl.LightningModule):
         elif target_layer_norm is not None:
             raise ValueError()
 
-        # Average top K blocks
+        # average across the selected top-K target layers
         targets = torch.stack(target_layers, dim=0).mean(0)  # (B, T, C)
 
         # post norm
@@ -410,7 +388,6 @@ class BimJepa(pl.LightningModule):
                 training=True,
             ).transpose(1, 2)
         elif target_norm is None:
-            # Explicitly leaving a pass here to make it clear that we're not doing anything
             pass
 
         return targets
@@ -418,7 +395,6 @@ class BimJepa(pl.LightningModule):
     def validation_step(
         self, batch, batch_idx: int
     ) -> Optional[Tuple[torch.Tensor, torch.Tensor]]:
-        # inputs: (B, N, 3)
         points, _ = batch
         points = self.val_transformations(points)
         x, y = self._perform_step(points)
@@ -427,24 +403,14 @@ class BimJepa(pl.LightningModule):
         self.log("val_pred_std", self.token_std(x))
         self.log("val_target_std", self.token_std(y))
 
-    # def validation_epoch_end(
-    #     self, outputs: List[Tuple[torch.Tensor, torch.Tensor]]
-    # ) -> None:
-    #     svm_validation: Dict[str, pl.LightningDataModule] = self.hparams.svm_validation  # type: ignore
-    #     for dataset_name, datamodule in svm_validation.items():
-    #         svm_train_acc, svm_val_acc = self.svm_validation(datamodule)
-    #         self.log(f"svm_train_acc_{dataset_name}", svm_train_acc)
-    #         self.log(f"svm_val_acc_{dataset_name}", svm_val_acc)
-
     def on_validation_epoch_end(self) -> None:
-        # this accesses the dictionary of real DATAMODULE OBJECTS
         for dataset_name, datamodule in self.svm_datamodules.items():
             svm_train_acc, svm_val_acc = self.svm_validation(datamodule)
             self.log(f"svm_train_acc_{dataset_name}", svm_train_acc)
             self.log(f"svm_val_acc_{dataset_name}", svm_val_acc)
 
     def svm_validation(self, datamodule: pl.LightningDataModule) -> Tuple[float, float]:
-        # Lightning controls the `training` and `grad_enabled` state. Don't want to mess with it, but make sure it's correct.
+        # invariants: Lightning should already have put us in eval mode without grad
         assert not self.training
         assert not torch.is_grad_enabled()
 
@@ -489,61 +455,23 @@ class BimJepa(pl.LightningModule):
         # tokens: (B, T, C)
         return tokens.reshape(-1, tokens.shape[-1]).std(0).mean()
 
-    # def configure_optimizers(self):
-    #     assert self.trainer is not None
-
-    #     if self.hparams.fix_estimated_stepping_batches is not None:  # type: ignore
-    #         # check that the correct value for the multi GPU fix was provided
-    #         assert self.trainer.estimated_stepping_batches == self.hparams.fix_estimated_stepping_batches  # type: ignore
-
-    #     opt = torch.optim.AdamW(
-    #         params=self.parameters(),
-    #         lr=self.hparams.learning_rate,  # type: ignore
-    #         weight_decay=self.hparams.optimizer_adamw_weight_decay,  # type: ignore
-    #     )
-
-    #     # sched = LinearWarmupCosineAnnealingLR(
-    #     #     opt,
-    #     #     warmup_epochs=self.hparams.lr_scheduler_linear_warmup_epochs,  # type: ignore
-    #     #     max_epochs=self.trainer.max_epochs,
-    #     #     warmup_start_lr=self.hparams.lr_scheduler_linear_warmup_start_lr,  # type: ignore
-    #     #     eta_min=self.hparams.lr_scheduler_cosine_eta_min,  # type: ignore
-    #     # )
-    #     sched = {
-    #         "scheduler": CosineAnnealingLR(
-    #         opt,
-    #         T_max=self.trainer.estimated_stepping_batches,
-    #         eta_min=self.hparams.lr_scheduler_cosine_eta_min,  # type: ignore
-    #     ),
-    #     "interval": "step",
-    #     }
-
-    #     return [opt], [sched]
-
-    def configure_optimizers(self): # updated to latest linearwarmup + cosine anneal
+    def configure_optimizers(self):
         assert self.trainer is not None
 
-        # This multi-GPU bug fix check can remain
         if self.hparams.fix_estimated_stepping_batches is not None:
             assert self.trainer.estimated_stepping_batches == self.hparams.fix_estimated_stepping_batches
 
-        # --- Optimizer ---
-        # This part remains the same
         opt = torch.optim.AdamW(
             params=self.parameters(),
             lr=self.hparams.learning_rate,
             weight_decay=self.hparams.optimizer_adamw_weight_decay,
         )
 
-        # --- Schedulers ---
-        # Get total training steps and calculate warmup steps
         total_steps = self.trainer.estimated_stepping_batches
         warmup_epochs = self.hparams.lr_scheduler_linear_warmup_epochs
         steps_per_epoch = total_steps // self.trainer.max_epochs
         warmup_steps = warmup_epochs * steps_per_epoch
 
-        # 1. Linear warmup scheduler
-        # This scheduler will increase the LR from a start_factor to 1.0 over `warmup_steps`
         warmup_scheduler = LinearLR(
             opt,
             start_factor=self.hparams.lr_scheduler_linear_warmup_start_lr / self.hparams.learning_rate,
@@ -551,53 +479,44 @@ class BimJepa(pl.LightningModule):
             total_iters=warmup_steps
         )
 
-        # 2. Cosine annealing scheduler
-        # This scheduler will decay the LR from its current value to eta_min over the remaining steps
         cosine_scheduler = CosineAnnealingLR(
             opt,
-            T_max=total_steps - warmup_steps, # The number of steps for the cosine decay phase
+            T_max=total_steps - warmup_steps,
             eta_min=self.hparams.lr_scheduler_cosine_eta_min
         )
 
-        # 3. Chain them together
-        # The sequential scheduler will use the warmup_scheduler for the first `warmup_steps`
-        # and then switch to the cosine_scheduler for the rest of the training.
         sequential_scheduler = SequentialLR(
             optimizer=opt,
             schedulers=[warmup_scheduler, cosine_scheduler],
-            milestones=[warmup_steps] # The step at which to switch schedulers
+            milestones=[warmup_steps]
         )
 
         sched = {
             "scheduler": sequential_scheduler,
-            "interval": "step", # Ensure the scheduler is updated every training step
+            "interval": "step",
         }
 
         return [opt], [sched]
 
     def on_save_checkpoint(self, checkpoint: Dict[str, Any]) -> None:
-        # This is a bit of a hack. We want to avoid saving the datasets in the svm_validation dict,
-        # as this would store the entire dataset inside the checkpoint, blowing it up to multiple GBs.
+        # don't persist the svm_validation datasets in the checkpoint — they can be many GBs
         checkpoint["hyper_parameters"]["svm_validation"] = {}
 
 
 def verify_no_content_match(target_tokens, context_blocks_tokens):
+    """Debug helper: assert that no context token equals any target token element-wise."""
     B, T_target, E = target_tokens.shape
     _, T_context, _ = context_blocks_tokens.shape
 
-    # Iterate over each example in the batch
     for b in range(B):
-        # Extract the single batch's target and context tokens
         batch_target_tokens = target_tokens[b]
         batch_context_tokens = context_blocks_tokens[b]
 
-        # Compare every context token against every target token
         for t_context in range(T_context):
             for t_target in range(T_target):
-                # Check if the current context token matches the current target token
                 if torch.equal(
                     batch_context_tokens[t_context], batch_target_tokens[t_target]
                 ):
-                    return False  # Found a match in content
+                    return False
 
-    return True  # No matches found
+    return True

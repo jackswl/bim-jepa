@@ -16,8 +16,7 @@ def fill_empty_indices(idx: torch.Tensor) -> torch.Tensor:
 
     mask = idx == -1
     first_idx = idx[:, :, 0].unsqueeze(-1).expand(-1, -1, K)
-    idx[mask] = first_idx[mask]  # replace -1 index with first index
-    # print(f"DEBUG: {(len(idx[mask].view(-1)) / len(idx.view(-1))) * 100:.1f}% of ball query indices are empty")
+    idx[mask] = first_idx[mask]
 
     return idx
 

@@ -1,15 +1,13 @@
 import numpy as np
 import torch
-import sys
 from pathlib import Path
 
-# sys.path.append(str(Path(__file__).resolve().parents[1]))
 from bimjepa.modules.tokenizer import PointcloudTokenizer
 from bimjepa.utils import transforms
 from bimjepa.modules.point_sequencer import PointSequencer
 from bimjepa.modules.target_sampler import TargetSampler
 from bimjepa.modules.context_sampler import ContextSampler
-from pytorch3d.ops import ball_query, knn_gather, knn_points, sample_farthest_points
+from pytorch3d.ops import knn_gather, knn_points
 
 
 TARGET_SAMPLER = TargetSampler(
@@ -75,7 +73,7 @@ def save_points_overlap_original(
     file_path: Path,
     over_lap_color: np.array = np.array([0, 10, 255]),
 ):
-    # Only saves the pc at the idx as black points and the original pc as red points
+    """Save `pc` as black points and `context_pc` as `over_lap_color` points to a single .npy."""
     if len(pc.shape) == 3:
         pc = pc.reshape(-1, 3)
     if len(context_pc.shape) == 3:
@@ -83,7 +81,7 @@ def save_points_overlap_original(
     pc = pc.numpy()
     context_pc = context_pc.numpy()
 
-    # Avoid overlapping points
+    # drop background points that coincide with the overlay so colors don't conflict
     pc = pc[~np.isin(pc, context_pc).all(1)]
 
     context_pc_colors = over_lap_color
@@ -100,21 +98,14 @@ def save_points_overlap_original(
 
 
 def save_points_original(pc: torch.tensor, file_path: Path):
-    # Only saves the pc at the idx as black points and the original pc as red points
     if len(pc.shape) == 3:
         pc = pc.reshape(-1, 3)
     pc = pc.numpy()
-
-    # pc_colors = np.array([10, 10, 12])
-    # pc = np.concatenate((pc, np.tile(pc_colors, (pc.shape[0], 1))), axis=1)
-
     np.save(file_path, pc)
 
 
 def main():
-    file_path = "./data/ShapeNet55/shapenet_pc/02691156-1e7dbf0057e067586e88b250ea6544d0.npy"  # Specify the path to your .npy file
-    # file_path = "data/ShapeNet55/shapenet_pc/02958343-a34dc1b89a52e2c92b12ea83455b0f44.npy" # car
-    # file_path = "/home/ayumu/Documents/SSL_3DClassification/data/ShapeNet55/shapenet_pc/02818832-5cdbef59581ba6b89a87002a4eeaf610.npy" # bed
+    file_path = "./data/ShapeNet55/shapenet_pc/02691156-1e7dbf0057e067586e88b250ea6544d0.npy"
     out_dir = Path("./output/")
     out_dir.mkdir(exist_ok=True, parents=True)
 
@@ -134,7 +125,7 @@ def main():
         K=32,
         return_sorted=False,
         return_nn=False,
-    )  # (B, G, K)
+    )
     group_pc = knn_gather(pc, idx)
 
     for i, target_patch in enumerate(target_patches):
@@ -150,7 +141,7 @@ def main():
         K=32,
         return_sorted=False,
         return_nn=False,
-    )  # (B, G, K)
+    )
     ctx_group = knn_gather(pc, idx)
     selected_points_ctx = ctx_group[0].reshape(-1, 3)
 
@@ -159,7 +150,7 @@ def main():
         selected_points_ctx,
         out_dir / "context.npy",
         over_lap_color=np.array([200, 0, 0]),
-    )    
+    )
 
 if __name__ == "__main__":
     main()

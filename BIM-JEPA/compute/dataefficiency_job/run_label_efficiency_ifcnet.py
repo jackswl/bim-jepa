@@ -59,7 +59,7 @@ def run_cmd(cmd: List[str], env=None) -> Tuple[int, str, str]:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", type=str, default="configs/BIM-JEPA/classification/ifcnet_label_efficiency.yaml")
-    parser.add_argument("--artifacts_root", type=str, default="/home/users/nus/e1291616/jepa/artifacts")
+    parser.add_argument("--artifacts_root", type=str, default="/home/users/nus/xxxxxxxx/jepa/artifacts")
     parser.add_argument("--fractions", type=str, default="0.01,0.05,0.10,0.25,0.50,0.75,1.00")
     parser.add_argument("--seeds", type=str, default="42,1337,2024")
     parser.add_argument("--dry_run", action="store_true")
@@ -93,7 +93,6 @@ def main():
                 "--data.class_path=bimjepa.datasets.ifcnet_datamodule_label_efficiency.IFCNetCoreDataModuleLE",
                 f"--data.init_args.train_fraction={frac}",
                 f"--data.init_args.subset_seed={seed}",
-                # keep validation disabled unless you want it
                 "--data.init_args.val_split_ratio=0.0",
             ]
 
@@ -106,7 +105,6 @@ def main():
                 print(f"[ERROR][FIT] {tag} failed:\n{err}")
                 continue
 
-            # Detect new version dir + ckpt
             try:
                 version_dir = newest_version_dir(logs_root, before_dirs)
                 ckpt_path = find_last_ckpt(version_dir)

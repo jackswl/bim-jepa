@@ -61,7 +61,6 @@ class PointcloudSubsampling(nn.Module):
             raise RuntimeError(f"No such subsampling strategy {self.strategy}")
 
 
-# TODO: remove this
 class PointcloudCenterAndNormalize(nn.Module):
     def __init__(
         self,

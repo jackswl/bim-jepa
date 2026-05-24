@@ -12,21 +12,6 @@ torch.set_float32_matmul_precision('high')
 if __name__ == "__main__":
     cli = LightningCLI(
         BimJepa,
-        # trainer_defaults={
-        #     # "default_root_dir": "artifacts",
-        #     # "accelerator": "gpu",
-        #     # "devices": 1,
-        #     # "precision": "32-true", # previously 16-mixed
-        #     # "max_epochs": 1000,
-        #     # "gradient_clip_val": 2,
-        #     # "gradient_clip_algorithm": "norm",
-        #     # "log_every_n_steps": 10,
-        #     # "check_val_every_n_epoch": 10,
-        #     "callbacks": [
-        #         LearningRateMonitor(logging_interval="epoch"),
-        #         TrackLinearAccAtMinLossCallback(),
-        #     ]
-        # },
         seed_everything_default=1,
         save_config_callback=None,  # https://github.com/Lightning-AI/lightning/issues/12028#issuecomment-1088325894
     )

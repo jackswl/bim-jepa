@@ -1,4 +1,3 @@
-# bimjepa/datasets/bimgeom_datamodule_label_efficiency.py
 import os
 import random
 from typing import Optional, List, Dict, Tuple
@@ -66,18 +65,16 @@ class BIMGEOMDataModuleLE(pl.LightningDataModule):
         subset_seed = self.hparams.subset_seed if self.hparams.subset_seed is not None else self.hparams.seed
         rng = random.Random(subset_seed)
 
-        # Discover classes from directories
         class_dirs = [d for d in os.listdir(data_dir) if os.path.isdir(os.path.join(data_dir, d))]
         class_dirs.sort()
         self.class_to_idx = {name: i for i, name in enumerate(class_dirs)}
 
-        # Collect files per class for training, and all test files
         train_files_per_class: Dict[str, List[str]] = {}
         test_files: List[str] = []
 
         for cname in class_dirs:
             class_path = os.path.join(data_dir, cname)
-            
+
             train_path = os.path.join(class_path, 'train')
             if os.path.exists(train_path):
                 files = _list_npy_files(train_path)
@@ -90,14 +87,13 @@ class BIMGEOMDataModuleLE(pl.LightningDataModule):
                 files.sort()
                 test_files.extend(files)
 
-        # --- Subsetting logic ported from IFCNetCoreDataModuleLE ---
         train_fraction = float(self.hparams.train_fraction)
         assert 0.0 < train_fraction <= 1.0, "train_fraction must be in (0, 1]."
 
         if self.hparams.stratified_per_class:
             selected_train_files: List[str] = []
             for cname, files in train_files_per_class.items():
-                files = files[:]  # copy
+                files = files[:]
                 rng.shuffle(files)
                 if train_fraction >= 1.0:
                     k = len(files)
@@ -107,14 +103,13 @@ class BIMGEOMDataModuleLE(pl.LightningDataModule):
                     k = min(k, len(files))
                 selected_train_files.extend(files[:k])
         else:
-            # Global sampling without class stratification
             all_train = [f for files in train_files_per_class.values() for f in files]
             rng.shuffle(all_train)
             k = int(round(len(all_train) * train_fraction))
-            k = max(1, k) # Ensure at least one sample
+            k = max(1, k)
             selected_train_files = all_train[:k]
 
-        # Optional: train/val split *after* subsetting
+        # train/val split is applied *after* subsetting so val reflects the reduced set
         if self.hparams.val_split_ratio > 0.0 and len(selected_train_files) > 1:
             def label_of(fp: str) -> int:
                 cname = os.path.basename(os.path.dirname(os.path.dirname(fp)))

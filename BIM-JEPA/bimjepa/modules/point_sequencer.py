@@ -125,7 +125,3 @@ class PointSequencer:
         centers = centers.view(B * N, C)[sorted_indiices, :]
 
         return tokens.view(B, N, E).contiguous(), centers.view(B, N, C).contiguous()
-
-
-         
-         

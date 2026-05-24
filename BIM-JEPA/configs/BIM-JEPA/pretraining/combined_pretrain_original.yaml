@@ -1,29 +1,28 @@
 seed_everything: 1
 trainer:
-  # from the __main__.py file
   default_root_dir: "artifacts"
   gradient_clip_val: 2
   gradient_clip_algorithm: "norm"
-  log_every_n_steps: 10 # 10
+  log_every_n_steps: 10
   strategy: "ddp_find_unused_parameters_true"
-  check_val_every_n_epoch: 100000 # i dont want to check this, too long
+  check_val_every_n_epoch: 100000  # SVM validation is expensive; effectively disable per-epoch checks
   accelerator: "gpu"
   devices: 4
   num_sanity_val_steps: 0
   sync_batchnorm: true
-  max_epochs: 500 # CHANGED: Reduced for a smaller dataset.
+  max_epochs: 500
   precision: "bf16-mixed"
   callbacks:
-    - class_path: pytorch_lightning.callbacks.LearningRateMonitor # FROM __MAIN__.PY
-      init_args: # FROM __MAIN__.PY
-        logging_interval: "epoch" # FROM __MAIN__.PY
-    - class_path: bimjepa.callbacks.log_at_best_val.TrackLinearAccAtMinLossCallback # FROM __MAIN__.PY
+    - class_path: pytorch_lightning.callbacks.LearningRateMonitor
       init_args:
-        monitor_metric_name: "svm_val_acc_ifcnetcore_val" # <-- ADDED THIS svm_val_acc_{dataset_name}
+        logging_interval: "epoch"
+    - class_path: bimjepa.callbacks.log_at_best_val.TrackLinearAccAtMinLossCallback
+      init_args:
+        monitor_metric_name: "svm_val_acc_ifcnetcore_val"  # follows the svm_val_acc_{dataset_name} pattern
     - class_path: pytorch_lightning.callbacks.ModelCheckpoint
       init_args:
-        every_n_epochs: 1      # <-- This is the crucial fix
-        save_last: true        # <-- This will now work as expected
+        every_n_epochs: 1
+        save_last: true
         save_top_k: 0
 model:
   tokenizer_num_groups: 64
@@ -44,57 +43,43 @@ model:
   predictor_attention_dropout: 0.05
   predictor_drop_path_rate: 0.25
   predictor_add_target_pos: true
-  token_seq_method: iterative_nearest_min_start # iterative_nearest, iterative_nearest_min_start (FROM POINT-JEPA)
-  target_sample_method: contiguous # One of random or contiguous (FROM POINT-JEPA)
+  token_seq_method: iterative_nearest_min_start  # one of: iterative_nearest, iterative_nearest_min_start
+  target_sample_method: contiguous               # one of: random, contiguous
   num_targets_per_sample: 4
   target_sample_ratio: [0.15, 0.2]
-  context_sample_method: contiguous  # One of "contiguous", "random", "rest" (FROM POINT-JEPA)
+  context_sample_method: contiguous              # one of: contiguous, random, rest
   context_sample_ratio: [0.4, 0.75]
   target_layers: [11]
   target_layer_part: final
   target_layer_norm: layer
-  target_norm: null # Null bc there is only one target layer
+  target_norm: null  # null because there is only one target layer (no post-mean norm needed)
   ema_tau_min: 0.9995
   ema_tau_max: 0.99999
-  ema_tau_epochs: 500 # CHANGED: Match new max_epochs
+  ema_tau_epochs: 500  # match max_epochs
   loss: smooth_l1
   learning_rate: 1e-4
   optimizer_adamw_weight_decay: 0.05
-  lr_scheduler_linear_warmup_epochs: 50 # 10%
+  lr_scheduler_linear_warmup_epochs: 50  # ~10% of max_epochs
   lr_scheduler_linear_warmup_start_lr: 1e-5
   lr_scheduler_cosine_eta_min: 1e-6
   train_transformations:
-  # REMOVED "subsample" because our data is already processed to 4096 points
+  # "subsample" is omitted because the input data is already pre-processed to 4096 points
   - "scale"
   - "center"
   - "unit_sphere"
   - "rotate"
   val_transformations:
-  # REMOVED "subsample"
   - "center"
   - "unit_sphere"
   transformation_subsample_points: 4096
   transformation_scale_min: 0.8
   transformation_scale_max: 1.2
-  transformation_scale_symmetries: [1, 1, 0] # 1,0,1 previously for point-jepa, now change to 1,1,0
-  transformation_rotate_dims: [2] # rotation around z-axis since BIM objects are gravity-aligned.
+  transformation_scale_symmetries: [1, 1, 0]
+  transformation_rotate_dims: [2]  # rotate around z-axis only since BIM objects are gravity-aligned
   transformation_rotate_degs: null
   transformation_translate: 0.2
   transformation_height_normalize_dim: 1
-  # svm_validation:
-  #   # CHANGED: Updated to validate on your IFCNetCore validation split
-  #   ifcnetcore_val:
-  #     class_path: bimjepa.datasets.ifcnetfull_datamodule.IFCFullDataModule
-  #     init_args:
-  #       data_dirs:
-  #         - data/IFC_extracted_elements_dataset_part_1_pointclouds_4096
-  #         # - data/IFC_extracted_elements_dataset_part_2_pointclouds_4096
-  #         # - data/IFC_extracted_elements_dataset_part_3_pointclouds_4096
-  #       batch_size: 1024
-  #       val_split_ratio: 0.3
-  #       seed: 42
 data:
-  # CHANGED: THIS IS FOR FULL DATASET EVERYTHING
   class_path: bimjepa.datasets.combined_ifc_datamodule.CombinedIFCDataModule
   init_args:
     data_dirs:
@@ -103,7 +88,7 @@ data:
       - data/IFC_extracted_elements_dataset_part_3_pointclouds_4096
       - data/IFCNet_NO_TEST_pointclouds_4096
       - data/processed_BIMGEOM_NO_TEST_pointclouds_4096
-    batch_size: 512 # CHANGED: Reduced batch size for a smaller dataset
+    batch_size: 512
     num_workers: 14
-    val_split_ratio: 0.0 # og 0.3 Use 30% of training data for validation, during training of full dataset set to 0.0
+    val_split_ratio: 0.0  # set to e.g. 0.3 to hold out a val split from training data
     seed: 42

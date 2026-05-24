@@ -65,19 +65,17 @@ class ContextSampler:
     ):
         _, T, _ = tokens.shape
 
-        # Calculate new ratio within specified range or use default
         ratio = (torch.rand(1, requires_grad=False, device=self._device) *
                  (self._sample_ratio_range[1] - self._sample_ratio_range[0]) +
                  self._sample_ratio_range[0]) if self._sample_ratio_range else torch.tensor([1], device=self._device)
 
-        # Determine available indices for selection, excluding those in target_indices
+        # mask out positions already claimed by target_indices
         valid_bool = torch.ones(T, device=self._device, dtype=torch.bool)
         for idx in target_indices.flatten():
-            valid_bool[idx] = 0  # Mark indices covered by target_indices as invalid
+            valid_bool[idx] = 0
 
-        # bool -> index
         valid_indices = valid_bool.nonzero().squeeze()
-        # Above line can put tensor into scaler if only one valid index is available
+        # .squeeze() collapses to a 0-d tensor when only one valid index remains; re-expand
         if valid_indices.dim() == 0:
             valid_indices = valid_indices.reshape(1)
 

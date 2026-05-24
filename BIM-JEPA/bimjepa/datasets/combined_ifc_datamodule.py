@@ -1,5 +1,3 @@
-# bimjepa/datasets/combined_ifc_datamodule.py
-
 import os
 from typing import Optional, List, Union, Tuple
 
@@ -45,27 +43,23 @@ class CombinedIFCDataModule(pl.LightningDataModule):
 
     def _get_class_name(self, file_path: str) -> Optional[str]:
         """
-        Intelligently extracts the class name from a file path.
-        - First, checks if the parent directory name is the class (nested structure).
-        - If not, falls back to parsing the filename (flat structure).
+        Extract the class name from a file path. Supports two layouts:
+        - Nested:  .../IfcBeam/001.npy           -> parent dir name
+        - Flat:    .../000001_IfcDoor.npy        -> token after the first underscore
         """
         try:
-            # Strategy 1: Nested structure (e.g., .../IfcBeam/001.npy)
             parent_dir_name = os.path.basename(os.path.dirname(file_path))
             if parent_dir_name.startswith('Ifc'):
                 return parent_dir_name
 
-            # Strategy 2: Flat structure (e.g., .../000001_IfcDoor.npy)
             filename = os.path.basename(file_path)
             name_without_ext = os.path.splitext(filename)[0]
             class_name = name_without_ext.split('_', 1)[1]
             return class_name
         except IndexError:
-            # Could not parse class name from filename
             return None
 
     def setup(self, stage: Optional[str] = None):
-        # 1. Recursively find all .npy files from all specified directories.
         all_files = []
         dirs_to_scan = self.hparams.data_dirs
         if isinstance(dirs_to_scan, str):
@@ -80,11 +74,10 @@ class CombinedIFCDataModule(pl.LightningDataModule):
                             all_files.append(os.path.join(root, file))
             else:
                 print(f"Warning: Directory not found, skipping: {directory}")
-        
+
         if not all_files:
             raise ValueError(f"No .npy files found in provided directories: {dirs_to_scan}")
 
-        # 2. Extract class names for all files and build class mapping.
         file_class_pairs = []
         all_class_names = set()
         for file_path in all_files:
@@ -92,14 +85,12 @@ class CombinedIFCDataModule(pl.LightningDataModule):
             if class_name:
                 all_class_names.add(class_name)
                 file_class_pairs.append((file_path, class_name))
-        
+
         sorted_classes = sorted(list(all_class_names))
         self.class_to_idx = {name: i for i, name in enumerate(sorted_classes)}
-        
-        # 3. Create final list of (filepath, label_index) items.
+
         all_items = [(fp, self.class_to_idx[cn]) for fp, cn in file_class_pairs]
 
-        # 4. Split the aggregated items into training and validation sets.
         if self.hparams.val_split_ratio > 0.0 and len(all_items) > 1:
             train_items, val_items = train_test_split(
                 all_items, 
@@ -141,5 +132,4 @@ class CombinedIFCDataModule(pl.LightningDataModule):
 
     @property
     def num_classes(self):
-        # Return 0 if setup hasn't been called yet
         return len(self.class_to_idx) if hasattr(self, 'class_to_idx') else 0

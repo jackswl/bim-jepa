@@ -18,7 +18,7 @@ model:
   encoder_add_pos_at_every_layer: true
   
   # --- Fine-tuning specific parameters ---
-  pretrained_ckpt_path: /home/users/nus/e1291616/jepa/artifacts/lightning_logs/version_309/checkpoints/last.ckpt
+  pretrained_ckpt_path: pretrained/bim_jepa_pretrained.ckpt
   encoder_unfreeze_epoch: 175
   
   # --- Classification Head ---
@@ -41,8 +41,6 @@ model:
   - "scale"
   - "center"
   - "unit_sphere"
-  # - "rotate"
-  # - "translate"
   val_transformations:
   - "center"
   - "unit_sphere"
@@ -57,5 +55,5 @@ data:
     data_dir: data/processed_BIMGEOM_pointclouds_4096
     batch_size: 32
     num_workers: 14
-    val_split_ratio: 0.0 # this is splitting 70% for training and 30% for validation from the training set. 0.3
+    val_split_ratio: 0.0  # 0.3 splits 70/30 train/val from the training set; 0.0 disables val
     seed: 42

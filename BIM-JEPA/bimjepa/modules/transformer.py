@@ -86,7 +86,6 @@ class OffsetAttention(nn.Module):
         super().__init__()
         self.num_heads = num_heads
         head_dim = dim // num_heads
-        # self.scale = qk_scale or head_dim**-0.5
         self.qkv = nn.Linear(dim, dim * 3, bias=qkv_bias)
         self.attn_drop = nn.Dropout(attn_drop)
         self.proj = nn.Linear(dim, dim)
@@ -135,7 +134,6 @@ class Block(nn.Module):
 
         self.drop_path = DropPath(drop_path) if drop_path > 0.0 else nn.Identity()
 
-        # ATTENTION BLOCK
         self.norm1 = norm_layer(dim)
         self.attn = attn_module(
             dim,
@@ -146,7 +144,6 @@ class Block(nn.Module):
             proj_drop=drop,
         )
 
-        # MLP BLOCK
         self.norm2 = norm_layer(dim)
         self.mlp = Mlp(
             in_features=dim,
@@ -207,7 +204,6 @@ class TransformerEncoder(nn.Module):
             ]
         )
 
-        # output norm
         self.norm = nn.LayerNorm(embed_dim)
 
         self.add_pos_at_every_layer = add_pos_at_every_layer
@@ -261,9 +257,8 @@ class TransformerPredictor(nn.Module):
         super().__init__()
         self.predictor_embed = nn.Linear(embed_dim, predictor_embed_dim, bias=True)
         self.mask_token = nn.Parameter(torch.zeros(1, 1, predictor_embed_dim))
-        # Might need trunc normal init here
 
-        # Here we use the same positional encoding as the student
+        # mirror the student's positional encoding so context/target positions live in the same space
         self.positional_encoding = nn.Sequential(
             nn.Linear(3, 128),
             nn.GELU(),
@@ -288,14 +283,10 @@ class TransformerPredictor(nn.Module):
         self.add_target_pos = add_target_pos
 
     def forward(self, x, center_x, center_pred):
-        # x: (B, N, C)
-        # center_x: (B, N, 3)
-        # center_pred: (B, T, 3)
+        # x: (B, N, C); center_x: (B, N, 3); center_pred: (B, T, 3)
 
-        # Bring it down to narrower dimension
         x = self.predictor_embed(x)  # (B, N, predictor_embed_dim)
 
-        # Add positional encoding
         if self.add_target_pos:
             pos = self.positional_encoding(center_x)
         else:
@@ -304,20 +295,18 @@ class TransformerPredictor(nn.Module):
         B, N_ctxt, D = x.shape
         _, N_tgt, _ = center_pred.shape
 
-        # concate mask tokens to x
         pos_embed = self.positional_encoding(center_pred)  # (B, T, predictor_embed_dim)
-        mask_tokens = self.mask_token.repeat(B, N_tgt, 1)  # (B, T, predictor_embed_dim)
+        mask_tokens = self.mask_token.repeat(B, N_tgt, 1)
         pos_embed += mask_tokens
 
-        pos = torch.cat((pos, pos_embed), dim=1)  # (B, N + T, predictor_embed_dim
+        pos = torch.cat((pos, pos_embed), dim=1)  # (B, N + T, predictor_embed_dim)
         empty_feat = torch.zeros((B, N_tgt, D), device=x.device, dtype=x.dtype)
         x = torch.cat((x, empty_feat), dim=1)
 
-        # Run through transformer
         x = self.predictor(x, pos=pos).last_hidden_state
 
+        # keep only the prediction positions, then project back to encoder dim
         x = x[:, N_ctxt:, :]
-        # Same with the target shape
         x = self.predictor_proj(x)  # (B, T, C)
 
         return x

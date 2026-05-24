@@ -22,23 +22,20 @@ class IFCFullDataset(Dataset):
     def __getitem__(self, idx):
         file_path = self.file_paths[idx]
         point_cloud = np.load(file_path).astype(np.float32)
-        
-        # Extracts class name from the filename
+
+        # filename layout is `<id>_<IfcClassName>.npy`
         filename = os.path.basename(file_path)
         name_without_ext = os.path.splitext(filename)[0]
         try:
             class_name = name_without_ext.split('_', 1)[1]
         except IndexError:
             class_name = "unknown"
-        
+
         label = self.class_to_idx.get(class_name, -1)
         return torch.from_numpy(point_cloud), torch.tensor(label, dtype=torch.long)
 
 class IFCFullDataModule(pl.LightningDataModule):
-    """
-    DataModule for the massive, flat-structured IFC dataset from multiple folders.
-    This version strictly follows the original file's logic without stratification.
-    """
+    """DataModule for flat-structured IFC datasets aggregated across multiple folders."""
     def __init__(
         self,
         data_dirs: Union[str, List[str]],
@@ -51,7 +48,6 @@ class IFCFullDataModule(pl.LightningDataModule):
         self.save_hyperparameters()
 
     def setup(self, stage: Optional[str] = None):
-        # 1. Aggregate files from all specified directories.
         all_files = []
         dirs_to_scan = self.hparams.data_dirs
         if isinstance(dirs_to_scan, str):
@@ -63,11 +59,10 @@ class IFCFullDataModule(pl.LightningDataModule):
                 all_files.extend(files_in_dir)
             else:
                 print(f"Warning: Directory not found, skipping: {directory}")
-        
+
         if not all_files:
             raise ValueError(f"No .npy files found in provided directories: {dirs_to_scan}")
 
-        # 2. Dynamically discover classes from all filenames.
         all_class_names = set()
         for file_path in all_files:
             filename = os.path.basename(file_path)
@@ -77,11 +72,10 @@ class IFCFullDataModule(pl.LightningDataModule):
                 all_class_names.add(class_name)
             except IndexError:
                 continue
-        
+
         sorted_classes = sorted(list(all_class_names))
         self.class_to_idx = {name: i for i, name in enumerate(sorted_classes)}
 
-        # 3. Split the aggregated files into training and validation sets.
         if self.hparams.val_split_ratio > 0.0:
             train_files, val_files = train_test_split(
                 all_files, 

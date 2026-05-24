@@ -1,8 +1,7 @@
 import torch
-from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
+from pytorch_lightning.callbacks import LearningRateMonitor
 from pytorch_lightning.cli import LightningCLI
 
-from bimjepa.datasets.ifcnet_datamodule import IFCNetCoreDataModule
 from bimjepa.models import BimJepaClassification
 
 
@@ -17,12 +16,6 @@ if __name__ == "__main__":
             "devices": 1,
             "callbacks": [
                 LearningRateMonitor(logging_interval="epoch"),
-                # ModelCheckpoint(save_on_train_epoch_end=True),
-                # ModelCheckpoint(
-                #     filename="{epoch}-{step}-{val_acc:.4f}",
-                #     monitor="val_acc",
-                #     mode="max",
-                # ),
             ],
         },
         seed_everything_default=42,

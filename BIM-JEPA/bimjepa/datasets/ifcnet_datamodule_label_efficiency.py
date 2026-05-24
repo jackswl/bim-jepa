@@ -1,4 +1,3 @@
-# bimjepa/datasets/ifcnet_datamodule_label_efficiency.py
 import os
 import random
 from typing import Optional, List, Dict, Tuple
@@ -46,7 +45,6 @@ class IFCNetCoreDataModuleLE(pl.LightningDataModule):
         num_workers: int = 8,
         val_split_ratio: float = 0.0,
         seed: int = 42,
-        # New:
         train_fraction: float = 1.0,
         subset_seed: Optional[int] = None,
         stratified_per_class: bool = False,
@@ -55,7 +53,6 @@ class IFCNetCoreDataModuleLE(pl.LightningDataModule):
         super().__init__()
         self.save_hyperparameters()
 
-        # Placeholders
         self.class_to_idx: Dict[str, int] = {}
         self.train_dataset: Optional[IFCNetCoreDataset] = None
         self.val_dataset: Optional[IFCNetCoreDataset] = None
@@ -70,12 +67,10 @@ class IFCNetCoreDataModuleLE(pl.LightningDataModule):
         subset_seed = self.hparams.subset_seed if self.hparams.subset_seed is not None else self.hparams.seed
         rng = random.Random(subset_seed)
 
-        # Discover classes
         class_dirs = [d for d in os.listdir(data_dir) if os.path.isdir(os.path.join(data_dir, d))]
         class_dirs.sort()
         self.class_to_idx = {name: i for i, name in enumerate(class_dirs)}
 
-        # Collect files per class
         train_files_per_class: Dict[str, List[str]] = {}
         test_files: List[str] = []
 
@@ -94,34 +89,31 @@ class IFCNetCoreDataModuleLE(pl.LightningDataModule):
                 files.sort()
                 test_files.extend(files)
 
-        # Subset training files (stratified per class by default)
         train_fraction = float(self.hparams.train_fraction)
         assert 0.0 < train_fraction <= 1.0, "train_fraction must be in (0, 1]."
 
         if self.hparams.stratified_per_class:
             selected_train_files: List[str] = []
             for cname, files in train_files_per_class.items():
-                files = files[:]  # copy
+                files = files[:]
                 rng.shuffle(files)
                 if train_fraction >= 1.0:
                     k = len(files)
                 else:
-                    # ensure at least min_samples_per_class for any class with >=1 file
+                    # floor each class at min_samples_per_class so rare classes don't drop to 0
                     k = max(self.hparams.min_samples_per_class if len(files) > 0 else 0,
                             int(round(len(files) * train_fraction)))
                     k = min(k, len(files))
                 selected_train_files.extend(files[:k])
         else:
-            # Global sampling without class stratification
             all_train = [f for files in train_files_per_class.values() for f in files]
             rng.shuffle(all_train)
             k = int(round(len(all_train) * train_fraction))
-            k = max(1, k)  # ensure at least one sample
+            k = max(1, k)
             selected_train_files = all_train[:k]
 
-        # Optional: train/val split after subsetting
+        # train/val split is applied *after* subsetting so val reflects the reduced set
         if self.hparams.val_split_ratio > 0.0:
-            # Use stratified split if possible
             def label_of(fp: str) -> int:
                 cname = os.path.basename(os.path.dirname(os.path.dirname(fp)))
                 return self.class_to_idx[cname]
@@ -131,7 +123,7 @@ class IFCNetCoreDataModuleLE(pl.LightningDataModule):
                 selected_train_files,
                 test_size=self.hparams.val_split_ratio,
                 random_state=self.hparams.seed,
-                stratify=y if len(set(y)) > 1 else None,  # only stratify if >1 class
+                stratify=y if len(set(y)) > 1 else None,
             )
         else:
             train_files = selected_train_files
@@ -141,7 +133,6 @@ class IFCNetCoreDataModuleLE(pl.LightningDataModule):
         self.val_dataset = IFCNetCoreDataset(val_files, self.class_to_idx)
         self.test_dataset = IFCNetCoreDataset(test_files, self.class_to_idx)
 
-        # Summary
         print("IFCNetCoreDataModuleLE setup complete:")
         print(f" - Found {len(self.class_to_idx)} classes.")
         print(f" - Train fraction: {train_fraction:.4f} (stratified={self.hparams.stratified_per_class})")
@@ -160,7 +151,6 @@ class IFCNetCoreDataModuleLE(pl.LightningDataModule):
         )
 
     def val_dataloader(self):
-        # Avoid persistent workers when dataset is empty
         nw = self.hparams.num_workers if len(self.val_dataset) > 0 else 0
         return DataLoader(
             self.val_dataset,

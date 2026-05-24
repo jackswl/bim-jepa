@@ -20,8 +20,8 @@ model:
   encoder_add_pos_at_every_layer: true
 
   # --- Fine-tuning specific parameters ---
-  pretrained_ckpt_path: /home/users/nus/e1291616/jepa/artifacts/lightning_logs/version_309/checkpoints/last.ckpt
-  encoder_unfreeze_epoch: 10000 # effectively never unfreeze 
+  pretrained_ckpt_path: pretrained/bim_jepa_pretrained.ckpt
+  encoder_unfreeze_epoch: 10000  # large value -> encoder stays frozen for the whole run
 
   # --- Classification Head ---
   cls_head: mlp
@@ -34,7 +34,7 @@ model:
   learning_rate: 0.001
   encoder_learning_rate: 0.0001
   optimizer_adamw_weight_decay: 0.05
-  # Make LR constant by neutralizing warmup + cosine
+  # constant LR: neutralize warmup + cosine by matching start/end to the base LR
   lr_scheduler_linear_warmup_epochs: 1
   lr_scheduler_linear_warmup_start_lr: 0.001
   lr_scheduler_cosine_eta_min: 0.001
@@ -61,6 +61,6 @@ data:
     val_split_ratio: 0.0
     seed: 42
 
-    # NEW: n-shot knob (overridden by the runner script):
+    # the runner script overrides n_shot and subset_seed per n-shot run
     n_shot: 5
     subset_seed: 42

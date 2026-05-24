@@ -20,27 +20,7 @@ class CLI(LightningCLI):
 
 def plot_confusion_matrix(label, pred, label_names):
     from matplotlib import pyplot as plt
-
-    # import seaborn as sns
     from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
-
-    # import pandas as pd
-    # data = pd.DataFrame(m)
-    # data = data.set_axis(label_names, axis=0)
-    # data = data.set_axis(label_names, axis=1)
-    # data = data.rename_axis("Ground truth", axis=0)
-    # data = data.rename_axis("Prediction", axis=1)
-    # plt.figure(figsize=(12, 12))
-    # ax = sns.heatmap(data, cmap="viridis", linewidth=1)
-    # ax.set_xticks([i + 0.5 for i in range(len(label_names))])
-    # ax.set_xticklabels(label_names, rotation=45, ha="right")
-    # ax.set_yticks([i + 0.5 for i in range(len(label_names))])
-    # ax.set_yticklabels(label_names)
-    # ax.set_xlabel("Prediction")
-    # ax.set_ylabel("Ground truth")
-    # ax.set_aspect("equal", adjustable="box")
-    # plt.savefig("figures/confusion_matrix.pdf")
-    # plt.clf()
 
     def plot(m):
         plt.figure(figsize=(9, 9))
@@ -75,7 +55,7 @@ def main():
         BimJepaClassification,
         trainer_defaults={
             "default_root_dir": "artifacts",
-            # defaults below don't matter here, but will shut up the warnings
+            # values here only silence trainer warnings; not actually used in this script
             "accelerator": "gpu",
             "devices": 1,
         },
@@ -86,7 +66,7 @@ def main():
 
     assert isinstance(cli.model, BimJepaClassification)
 
-    # our model needs the trainer to lookup the datamodule
+    # the model needs the trainer to look up the datamodule
     cli.model.trainer = cli.trainer
     cli.model.trainer.datamodule = cli.datamodule  # type: ignore
 
@@ -121,9 +101,6 @@ def main():
     points = torch.cat(points_list, dim=0)  # (N, 1024, 3)
 
     plot_confusion_matrix(label.numpy(), pred.numpy(), cli.datamodule.label_names)
-    # torch.save(pred, "figures/confusion_matrix/confusion_pred.pt")
-    # torch.save(label, "figures/confusion_matrix/confusion_label.pt")
-    # torch.save(points, "figures/confusion_matrix/confusion_points.pt")
 
 
 if __name__ == "__main__":

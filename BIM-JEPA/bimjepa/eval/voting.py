@@ -3,7 +3,7 @@ import torch.nn.functional as F
 from pytorch_lightning.cli import LightningArgumentParser, LightningCLI
 from pytorch_lightning.loggers import WandbLogger
 
-from bimjepa.datasets import (  # allow shorthand notation
+from bimjepa.datasets import (  # allow shorthand notation in configs
     ModelNet40FewShotDataModule,
     ModelNet40Ply2048DataModule,
     ScanObjectNNDataModule,
@@ -25,7 +25,7 @@ def main():
         BimJepaClassification,
         trainer_defaults={
             "default_root_dir": "artifacts",
-            # defaults below don't matter here, but will shut up the warnings
+            # values here only silence trainer warnings; not actually used in this script
             "accelerator": "gpu",
             "devices": 1,
         },
@@ -40,7 +40,7 @@ def main():
         if isinstance(logger, WandbLogger):
             logger.experiment.define_metric("val_vote_acc", summary="max")
 
-    # our model needs the trainer to lookup the datamodule
+    # the model needs the trainer to look up the datamodule
     cli.model.trainer = cli.trainer
     cli.model.trainer.datamodule = cli.datamodule  # type: ignore
 
@@ -85,7 +85,7 @@ def vote(cli: CLI) -> float:
         vote_pred_list.append(vote_pred.cpu())
         label_list.append(label.cpu())
 
-    vote_pred = torch.cat(vote_pred_list, dim=0)  # (N, 768)
+    vote_pred = torch.cat(vote_pred_list, dim=0)  # (N,)
     label = torch.cat(label_list, dim=0)  # (N,)
 
     return (torch.sum(vote_pred == label) / label.shape[0]).item()

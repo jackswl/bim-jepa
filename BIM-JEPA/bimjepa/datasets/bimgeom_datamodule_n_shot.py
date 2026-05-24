@@ -1,4 +1,3 @@
-# bimjepa/datasets/bimgeom_datamodule_n_shot.py
 import os
 import random
 from typing import Optional, List, Dict, Tuple
@@ -79,22 +78,20 @@ class BIMGEOMDataModuleNShot(pl.LightningDataModule):
             if os.path.exists(test_path):
                 test_files.extend(sorted(_list_npy_files(test_path)))
 
-        # **MODIFIED LOGIC: N-Shot Subsetting**
         n_samples = self.hparams.samples_per_class
         assert n_samples > 0, "samples_per_class must be positive."
 
         selected_train_files: List[str] = []
         for cname, files in train_files_per_class.items():
-            files_copy = files[:]  # Create a copy to shuffle
+            files_copy = files[:]
             rng.shuffle(files_copy)
-            # Take at most n_samples, or all if the class has fewer
+            # take at most n_samples per class, or all if the class has fewer
             k = min(n_samples, len(files_copy))
             selected_train_files.extend(files_copy[:k])
-        
-        # Shuffle the final selection to mix classes before creating the dataset
+
+        # shuffle across classes so batches are mixed
         rng.shuffle(selected_train_files)
 
-        # Optional: train/val split after subsetting
         if self.hparams.val_split_ratio > 0.0 and len(selected_train_files) > 1:
             def label_of(fp: str) -> int:
                 cname = os.path.basename(os.path.dirname(os.path.dirname(fp)))

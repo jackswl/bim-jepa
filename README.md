@@ -4,11 +4,9 @@ Created by [Jack Wei Lun Shi](https://jackswl.github.io/)\*, [Wawan Solihin](htt
 
 [[Automation in Construction]](https://jackswl.github.io/bim-jepa/) [[Project Page]](https://jackswl.github.io/bim-jepa/) [[Model Weights]](#pretrained-models)
 
-This repository contains BIM-JEPA implementation for __BIM-JEPA: Self-supervised learning for BIM element classification using a joint embedding predictive architecture__ (Under Review).
+This repository contains BIM-JEPA implementation for __BIM-JEPA: Self-supervised learning for BIM element classification using a joint embedding predictive architecture__.
 
 BIM-JEPA is a pre-trained model for self-supervised geometry-based representation learning in the AEC domain, designed to classify Building Information Modeling (BIM) elements ...
-
-All training code and weights will be released upon acceptance of the paper.
 
 ## <a id="pretrained-models"></a>Pre-trained / Fine-tuned Models
 
@@ -62,6 +60,51 @@ pip install transformers accelerate "pytorch-lightning>=2.0" "jsonargparse[signa
 
 ### Dataset
 The details of raw data can be found in [DATASET.md](./DATASET.md). After downloading the raw data, please run [data_convert.ipynb](./data_convert.ipynb) to convert all raw data into NPY point clouds.
+
+### Pre-trained Weights
+All checkpoints are hosted on HuggingFace (see the [table above](#pretrained-models)). First install the HuggingFace CLI:
+```
+pip install -U "huggingface_hub[cli]"
+```
+
+To fine-tune from the pre-trained encoder, download the pre-trained checkpoint into `BIM-JEPA/pretrained/` (this is the default path expected by the classification configs):
+```
+cd BIM-JEPA
+huggingface-cli download llama2thedog/BIM-JEPA-pretrained \
+    bim_jepa_pretrained.ckpt --local-dir pretrained
+```
+
+To run inference / evaluation with a fine-tuned classifier, download the corresponding fine-tuned checkpoint, e.g.:
+```
+huggingface-cli download llama2thedog/BIM-JEPA-finetuned-ifcnetcore \
+    bim_jepa_finetuned_ifcnetcore.ckpt --local-dir pretrained
+```
+
+### Training and Evaluation
+All commands below are run from the `BIM-JEPA/` directory.
+
+Fine-tune on IFCNetCore:
+```
+python -m bimjepa.tasks.classification fit \
+    -c configs/BIM-JEPA/classification/ifcnet_classification.yaml
+```
+
+Fine-tune on BIMGEOM:
+```
+python -m bimjepa.tasks.classification fit \
+    -c configs/BIM-JEPA/classification/bimgeom_classification.yaml
+```
+
+Pre-train from scratch (multi-GPU, expects all five pre-training datasets prepared as in [DATASET.md](./DATASET.md)):
+```
+python -m bimjepa fit \
+    -c configs/BIM-JEPA/pretraining/combined_pretrain_original.yaml
+```
+
+For HPC users, example PBS scripts are provided in [`BIM-JEPA/compute/`](./BIM-JEPA/compute/) — see [`BIM-JEPA/compute/README.md`](./BIM-JEPA/compute/README.md) for details.
+
+### Quick Demo
+For a no-install Colab walkthrough that downloads a fine-tuned model and runs inference on sample point clouds, see [`BIM_JEPA_demo.ipynb`](./BIM_JEPA_demo.ipynb).
 
 
 ## License

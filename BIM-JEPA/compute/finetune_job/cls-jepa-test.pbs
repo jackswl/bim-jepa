@@ -3,7 +3,7 @@
 #PBS -l select=1:ngpus=1
 #PBS -l walltime=4:00:00
 #PBS -j oe
-#PBS -P personal-e1291616
+#PBS -P personal-xxxxxxxx
 #PBS -q normal
 #PBS -N gpuJob
 
@@ -19,13 +19,10 @@ conda activate bimjepa
     # Check that the correct Conda environment is active
     echo "Active Conda Environment:"
     conda info --envs
-    # THIS PBS IS FOR IFCNETCORE
-    # Run the Python script for testing !! NOTE! THIS SCRIPT SHOULD ONLY BE RUN ONCE! ONLY AFTER TUNING IS DONE !!
-    # UPDATED: Added --ckpt_path to load the final trained model
-    # Navigate to BIM-JEPA root to find the bimjepa module properly
+    # Final test run on IFCNetCore. Run only once, after all tuning is complete.
     cd ../.. || exit 1
     python -m bimjepa.tasks.classification test \
         -c configs/BIM-JEPA/classification/ifcnet_classification.yaml \
-        --ckpt_path /home/users/nus/e1291616/jepa/artifacts/lightning_logs/version_310/checkpoints/epoch=349-step=60550.ckpt # prev #37
+        --ckpt_path /home/users/nus/xxxxxxxx/jepa/artifacts/lightning_logs/version_310/checkpoints/epoch=349-step=60550.ckpt
 
 } > out.$PBS_JOBID 2> err.$PBS_JOBID

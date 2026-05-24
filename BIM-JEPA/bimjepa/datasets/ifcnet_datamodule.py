@@ -41,7 +41,6 @@ class IFCNetCoreDataModule(pl.LightningDataModule):
         self.save_hyperparameters()
 
     def setup(self, stage: Optional[str] = None):
-        # Discover classes
         class_dirs = [d for d in os.listdir(self.hparams.data_dir)
                       if os.path.isdir(os.path.join(self.hparams.data_dir, d))]
         class_dirs.sort()
@@ -50,7 +49,6 @@ class IFCNetCoreDataModule(pl.LightningDataModule):
         train_val_files: List[str] = []
         test_files: List[str] = []
 
-        # Collect sorted file lists per class
         for class_name in class_dirs:
             class_path = os.path.join(self.hparams.data_dir, class_name)
 
@@ -58,21 +56,20 @@ class IFCNetCoreDataModule(pl.LightningDataModule):
             if os.path.exists(train_path):
                 files = [os.path.join(train_path, f) for f in os.listdir(train_path)
                          if f.endswith(".npy")]
-                files.sort()  # match LE: sort within class
+                files.sort()
                 train_val_files.extend(files)
 
             test_path = os.path.join(class_path, "test")
             if os.path.exists(test_path):
                 files = [os.path.join(test_path, f) for f in os.listdir(test_path)
                          if f.endswith(".npy")]
-                files.sort()  # match LE: sort within class
+                files.sort()
                 test_files.extend(files)
 
-        # Pre-shuffle the full training list with a deterministic RNG (match LE behavior at frac=1.0)
+        # deterministic shuffle so the train/val split matches the LE variant at frac=1.0
         rng = random.Random(self.hparams.seed)
         rng.shuffle(train_val_files)
 
-        # Optional: train/val split (use stratified split like LE when possible)
         if self.hparams.val_split_ratio > 0.0:
             def label_of(fp: str) -> int:
                 cname = os.path.basename(os.path.dirname(os.path.dirname(fp)))
@@ -110,7 +107,6 @@ class IFCNetCoreDataModule(pl.LightningDataModule):
         )
 
     def val_dataloader(self):
-        # Avoid persistent workers when dataset is empty (match LE)
         nw = self.hparams.num_workers if len(self.val_dataset) > 0 else 0
         return DataLoader(
             self.val_dataset,
@@ -130,132 +126,3 @@ class IFCNetCoreDataModule(pl.LightningDataModule):
     @property
     def num_classes(self):
         return len(self.class_to_idx)
-
-# import os
-# from typing import Optional, List
-
-# import numpy as np
-# import pytorch_lightning as pl
-# import torch
-# from torch.utils.data import DataLoader, Dataset
-# from sklearn.model_selection import train_test_split
-
-# class IFCNetCoreDataset(Dataset):
-#     """A PyTorch Dataset for loading .npy point clouds from the IFCNetCore structure."""
-#     def __init__(self, file_paths: List[str], class_to_idx: dict):
-#         super().__init__()
-#         self.file_paths = file_paths
-#         self.class_to_idx = class_to_idx
-
-#     def __len__(self):
-#         return len(self.file_paths)
-
-#     def __getitem__(self, idx):
-#         file_path = self.file_paths[idx]
-        
-#         # Load the point cloud from the .npy file
-#         point_cloud = np.load(file_path).astype(np.float32)
-        
-#         # Extract the class name from the file path (e.g., 'IfcAirTerminal')
-#         class_name = os.path.basename(os.path.dirname(os.path.dirname(file_path)))
-#         label = self.class_to_idx.get(class_name, -1) # Return -1 if class not found
-        
-#         return torch.from_numpy(point_cloud), torch.tensor(label, dtype=torch.long)
-
-# class IFCNetCoreDataModule(pl.LightningDataModule):
-#     """A PyTorch Lightning DataModule for the IFCNetCore dataset."""
-#     def __init__(
-#         self,
-#         data_dir: str,
-#         batch_size: int = 32,
-#         num_workers: int = 8,
-#         val_split_ratio: float = 0.3,
-#         seed: int = 42,
-#     ):
-#         super().__init__()
-#         self.save_hyperparameters()
-
-#     def setup(self, stage: Optional[str] = None):
-#         # Find all class directories
-#         class_dirs = [d for d in os.listdir(self.hparams.data_dir) if os.path.isdir(os.path.join(self.hparams.data_dir, d))]
-#         class_dirs.sort()
-#         self.class_to_idx = {name: i for i, name in enumerate(class_dirs)}
-        
-#         train_val_files = []
-#         test_files = []
-
-#         # Walk through the directory structure to find all .npy files
-#         for class_name in class_dirs:
-#             class_path = os.path.join(self.hparams.data_dir, class_name)
-            
-#             train_path = os.path.join(class_path, 'train')
-#             if os.path.exists(train_path):
-#                 for f in os.listdir(train_path):
-#                     if f.endswith('.npy'):
-#                         train_val_files.append(os.path.join(train_path, f))
-
-#             test_path = os.path.join(class_path, 'test')
-#             if os.path.exists(test_path):
-#                 for f in os.listdir(test_path):
-#                     if f.endswith('.npy'):
-#                         test_files.append(os.path.join(test_path, f))
-
-#         # # Split the training files into training and validation sets
-#         # train_files, val_files = train_test_split(
-#         #     train_val_files, 
-#         #     test_size=self.hparams.val_split_ratio, 
-#         #     random_state=self.hparams.seed
-#         # )
-
-#         # Split the training files into training and validation sets
-#         if self.hparams.val_split_ratio > 0.0:
-#             train_files, val_files = train_test_split(
-#                 train_val_files, 
-#                 test_size=self.hparams.val_split_ratio, 
-#                 random_state=self.hparams.seed
-#             )
-#         else:
-#             # If split ratio is 0, use all files for training and none for validation
-#             train_files = train_val_files
-#             val_files = []
-            
-#         self.train_dataset = IFCNetCoreDataset(train_files, self.class_to_idx)
-#         self.val_dataset = IFCNetCoreDataset(val_files, self.class_to_idx)
-#         self.test_dataset = IFCNetCoreDataset(test_files, self.class_to_idx)
-        
-#         print(f"IFCNetCoreDataModule setup complete:")
-#         print(f" - Found {len(self.class_to_idx)} classes.")
-#         print(f" - Train samples: {len(self.train_dataset)}")
-#         print(f" - Validation samples: {len(self.val_dataset)}")
-#         print(f" - Test samples: {len(self.test_dataset)}")
-
-
-#     def train_dataloader(self):
-#         return DataLoader(
-#             self.train_dataset,
-#             batch_size=self.hparams.batch_size,
-#             shuffle=True,
-#             num_workers=self.hparams.num_workers,
-#             drop_last=True,
-#             persistent_workers=True if self.hparams.num_workers > 0 else False,
-#         )
-
-#     def val_dataloader(self):
-#         return DataLoader(
-#             self.val_dataset,
-#             batch_size=self.hparams.batch_size,
-#             num_workers=self.hparams.num_workers,
-#             persistent_workers=True if self.hparams.num_workers > 0 else False,
-#         )
-
-#     def test_dataloader(self):
-#         return DataLoader(
-#             self.test_dataset,
-#             batch_size=self.hparams.batch_size,
-#             num_workers=self.hparams.num_workers,
-#             persistent_workers=True if self.hparams.num_workers > 0 else False,
-#         )
-
-#     @property
-#     def num_classes(self):
-#         return len(self.class_to_idx)
