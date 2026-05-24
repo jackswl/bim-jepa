@@ -6,6 +6,10 @@ Created by [Jack Wei Lun Shi](https://jackswl.github.io/)\*, [Wawan Solihin](htt
 
 This repository contains BIM-JEPA implementation for __Self-supervised learning for BIM element classification using a joint embedding predictive architecture__.
 
+<p align="center">
+  <img src="assets/figure3.png" alt="BIM-JEPA methodology overview" width="100%"/>
+</p>
+
 The development of scalable models for automated Building Information Modeling (BIM) element classification is hindered by the reliance on supervised learning, which requires expensive and laborious manual data annotation. This paper introduces a pre-trained model that leverages a Joint Embedding Predictive Architecture for self-supervised learning on unlabeled 3D point cloud representations of individual BIM elements. By predicting the latent representations of masked regions of element geometry, the proposed model learns rich geometric features that achieve competitive accuracy on a downstream classification task, outperforming existing supervised methods without heavy data augmentation, while excelling in data-scarce scenarios. This paper mitigates the data annotation bottleneck and establishes a path toward developing a foundation model for BIM geometry, enabling more scalable, data-efficient, and generalizable representation learning in the Architecture, Engineering, and Construction domain.
 
 ## <a id="pretrained-models"></a>Pre-trained / Fine-tuned Models
