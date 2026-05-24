@@ -1,0 +1,79 @@
+tokenizer_num_groups: 64
+tokenizer_group_size: 32
+tokenizer_group_radius: null
+encoder_dim: 384
+encoder_depth: 12
+encoder_heads: 6
+encoder_dropout: 0.1
+encoder_attention_dropout: 0.05
+encoder_drop_path_rate: 0.25
+encoder_add_pos_at_every_layer: true
+predictor_embed_dim: 192
+predictor_depth: 6
+predictor_heads: 6
+predictor_mlp_ratio: 4.0
+predictor_drop_out: 0.1
+predictor_attention_dropout: 0.05
+predictor_drop_path_rate: 0.25
+predictor_add_target_pos: true
+predictor_add_pos_at_every_layer: false
+token_seq_method: iterative_nearest_min_start
+target_sample_method: contiguous
+num_targets_per_sample: 4
+target_sample_ratio:
+- 0.15
+- 0.2
+context_sample_method: contiguous
+context_sample_ratio:
+- 0.4
+- 0.75
+target_layers:
+- 11
+target_layer_part: final
+target_layer_norm: layer
+target_norm: null
+ema_tau_max: 0.99999
+ema_tau_min: 0.9995
+ema_tau_epochs: 500
+loss: smooth_l1
+loss_beta: 2
+learning_rate: 0.0001
+optimizer_adamw_weight_decay: 0.05
+lr_scheduler_linear_warmup_epochs: 50
+lr_scheduler_linear_warmup_start_lr: 1.0e-05
+lr_scheduler_cosine_eta_min: 1.0e-06
+train_transformations:
+- scale
+- center
+- unit_sphere
+- rotate
+val_transformations:
+- center
+- unit_sphere
+transformation_subsample_points: 4096
+transformation_scale_min: 0.8
+transformation_scale_max: 1.2
+transformation_scale_symmetries:
+- 1
+- 1
+- 0
+transformation_rotate_dims:
+- 2
+transformation_rotate_degs: null
+transformation_translate: 0.2
+transformation_height_normalize_dim: 1
+svm_validation: {}
+svm_validation_C: 0.012
+fix_estimated_stepping_batches: null
+pretrained_ckpt_path: null
+_instantiator: pytorch_lightning.cli.instantiate_module
+data_dirs:
+- IFC_extracted_elements_dataset_part_1_pointclouds_4096
+- IFC_extracted_elements_dataset_part_2_pointclouds_4096
+- IFC_extracted_elements_dataset_part_3_pointclouds_4096
+- IFCNet_NO_TEST_pointclouds_4096
+- processed_BIMGEOM_NO_TEST_pointclouds_4096
+batch_size: 512
+num_workers: 14
+val_split_ratio: 0.0
+seed: 42

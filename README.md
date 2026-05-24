@@ -14,7 +14,7 @@ All model weights are available on HuggingFace.
 
 |model| dataset | config | url|
 | :---: | :---: | :---: |  :---: | 
-|BIM-JEPA-pretrained| IFC-884; IFCNet; BIMGEOM |  [config](BIM-JEPA/configs/BIM-JEPA/pretraining/combined_pretrain_original.yaml)|  [HuggingFace](https://huggingface.co/llama2thedog/BIM-JEPA-pretrained)|
+|BIM-JEPA-pretrained| IFC-884K; IFCNet; BIMGEOM |  [config](BIM-JEPA/configs/BIM-JEPA/pretraining/combined_pretrain_original.yaml)|  [HuggingFace](https://huggingface.co/llama2thedog/BIM-JEPA-pretrained)|
 
 |model| dataset  | Overall Acc | Mean Acc | config | url|
 | :---:| :---: | :---: |  :---: | :---: | :---: |
