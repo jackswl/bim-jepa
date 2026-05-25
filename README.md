@@ -1,124 +1,43 @@
-# Self-supervised learning for BIM element classification using a joint embedding predictive architecture
+# Academic Project Page Template
+This is an academic paper project page template.
 
-Created by [Jack Wei Lun Shi](https://jackswl.github.io/)\*, [Wawan Solihin](https://cde.nus.edu.sg/cee/staff/wawan-solihin/), Yufeng Weng, [Yimin Zhao](https://ztony0712.github.io/), [Leong Hien Poh](https://scholar.google.com/citations?user=xZ3x56EAAAAJ&hl=en), [Justin K.W. Yeoh](https://scholar.google.com/citations?user=m9LF49sAAAAJ&hl=en)
-
-[[Automation in Construction]](https://jackswl.github.io/bim-jepa/) [[Project Page]](https://jackswl.github.io/bim-jepa/) [[Model Weights]](#pretrained-models)
-
-This repository contains BIM-JEPA implementation for __Self-supervised learning for BIM element classification using a joint embedding predictive architecture__.
-
-<p align="center">
-  <img src="assets/figure3.png" alt="BIM-JEPA methodology overview" width="100%"/>
-</p>
-
-The development of scalable models for automated Building Information Modeling (BIM) element classification is hindered by the reliance on supervised learning, which requires expensive and laborious manual data annotation. This paper introduces a pre-trained model that leverages a Joint Embedding Predictive Architecture for self-supervised learning on unlabeled 3D point cloud representations of individual BIM elements. By predicting the latent representations of masked regions of element geometry, the proposed model learns rich geometric features that achieve competitive accuracy on a downstream classification task, outperforming existing supervised methods without heavy data augmentation, while excelling in data-scarce scenarios. This paper mitigates the data annotation bottleneck and establishes a path toward developing a foundation model for BIM geometry, enabling more scalable, data-efficient, and generalizable representation learning in the Architecture, Engineering, and Construction domain.
-
-## <a id="pretrained-models"></a>Pre-trained / Fine-tuned Models
-
-All model weights are available on HuggingFace.
-
-|model| dataset | config | url|
-| :---: | :---: | :---: |  :---: | 
-|BIM-JEPA-pretrained| IFC-884K; IFCNet; BIMGEOM |  [config](BIM-JEPA/configs/BIM-JEPA/pretraining/combined_pretrain_original.yaml)|  [HuggingFace](https://huggingface.co/llama2thedog/BIM-JEPA-pretrained)|
-
-|model| dataset  | Overall Acc | Mean Acc | config | url|
-| :---:| :---: | :---: |  :---: | :---: | :---: |
-|BIM-JEPA-IFCNetCore| IFCNetCore | 89.37 | 86.63 |  [config](BIM-JEPA/configs/BIM-JEPA/classification/ifcnet_classification.yaml) | [HuggingFace](https://huggingface.co/llama2thedog/BIM-JEPA-finetuned-ifcnetcore) |
-|BIM-JEPA-BIMGEOM| BIMGEOM | 92.43 | 89.53 |[config](BIM-JEPA/configs/BIM-JEPA/classification/bimgeom_classification.yaml) | [HuggingFace](https://huggingface.co/llama2thedog/BIM-JEPA-finetuned-bimgeom) |
+Example project pages built using this template are:
+- https://www.vision.huji.ac.il/deepsim/
+- https://www.vision.huji.ac.il/3d_ads/
+- https://www.vision.huji.ac.il/ssrl_ad/
+- https://www.vision.huji.ac.il/conffusion/
 
 
-## Usage
+## Start using the template
+To start using the template click on `Use this Template`.
 
-### Requirements
-- PyTorch >= 2.4.1
-- python == 3.11
-- CUDA >= 12.1
-- torchvision
-- PyTorch3D
+The template uses html for controlling the content and css for controlling the style. 
+To edit the websites contents edit the `index.html` file. It contains different HTML "building blocks", use whichever ones you need and comment out the rest.  
 
-### Conda Installation
-Option A (Recommended) -> You can create conda environment using:
-```
-conda env create -f environment.yml
-conda activate bimjepa
-```
+**IMPORTANT!** Make sure to replace the `favicon.ico` under `static/images/` with one of your own, otherwise your favicon is going to be a dreambooth image of me.
 
-Option B -> Create environment:
-```
-conda create -n bimjepa \
-    python=3.11 \
-    pytorch=2.4.1 \
-    torchvision=0.19.1 \
-    pytorch-cuda=12.1 \
-    cudatoolkit \
-    -c pytorch -c nvidia -y
-```
-After that, install PyTorch3D (https://github.com/facebookresearch/pytorch3d):
-```
-export FORCE_CUDA=1
-conda install pytorch3d::pytorch3d
-```
-Finally, install the remaining miscellaneous/visualization packages:
-```
-pip install transformers accelerate "pytorch-lightning>=2.0" "jsonargparse[signatures]" trimesh scikit-learn h5py matplotlib wandb timm lightning-bolts fvcore pandas seaborn plotly
-```
+## Components
+- Teaser video
+- Images Carousel
+- Youtube embedding
+- Video Carousel
+- PDF Poster
+- Bibtex citation
 
-### Dataset
-The details of raw data can be found in [DATASET.md](./DATASET.md). After downloading the raw data, please run [data_convert.ipynb](./data_convert.ipynb) to convert all raw data into NPY point clouds.
+## Tips:
+- The `index.html` file contains comments instructing you what to replace, you should follow these comments.
+- The `meta` tags in the `index.html` file are used to provide metadata about your paper 
+(e.g. helping search engine index the website, showing a preview image when sharing the website, etc.)
+- The resolution of images and videos can usually be around 1920-2048, there rarely a need for better resolution that take longer to load. 
+- All the images and videos you use should be compressed to allow for fast loading of the website (and thus better indexing by search engines). For images, you can use [TinyPNG](https://tinypng.com), for videos you can need to find the tradeoff between size and quality.
+- When using large video files (larger than 10MB), it's better to use youtube for hosting the video as serving the video from the website can take time.
+- Using a tracker can help you analyze the traffic and see where users came from. [statcounter](https://statcounter.com) is a free, easy to use tracker that takes under 5 minutes to set up. 
+- This project page can also be made into a github pages website.
+- Replace the favicon to one of your choosing (the default one is of the Hebrew University). 
+- Suggestions, improvements and comments are welcome, simply open an issue or contact me. You can find my contact information at [https://pages.cs.huji.ac.il/eliahu-horwitz/](https://pages.cs.huji.ac.il/eliahu-horwitz/)
 
-### Pre-trained Weights
-All checkpoints are hosted on HuggingFace (see the [table above](#pretrained-models)). First install the HuggingFace CLI:
-```
-pip install -U "huggingface_hub[cli]"
-```
+## Acknowledgments
+Parts of this project page were adopted from the [Nerfies](https://nerfies.github.io/) page.
 
-To fine-tune from the pre-trained encoder, download the pre-trained checkpoint into `BIM-JEPA/pretrained/` (this is the default path expected by the classification configs):
-```
-cd BIM-JEPA
-huggingface-cli download llama2thedog/BIM-JEPA-pretrained \
-    bim_jepa_pretrained.ckpt --local-dir pretrained
-```
-
-To run inference / evaluation with a fine-tuned classifier, download the corresponding fine-tuned checkpoint, e.g.:
-```
-huggingface-cli download llama2thedog/BIM-JEPA-finetuned-ifcnetcore \
-    bim_jepa_finetuned_ifcnetcore.ckpt --local-dir pretrained
-```
-
-### Training and Evaluation
-All commands below are run from the `BIM-JEPA/` directory.
-
-Fine-tune on IFCNetCore:
-```
-python -m bimjepa.tasks.classification fit \
-    -c configs/BIM-JEPA/classification/ifcnet_classification.yaml
-```
-
-Fine-tune on BIMGEOM:
-```
-python -m bimjepa.tasks.classification fit \
-    -c configs/BIM-JEPA/classification/bimgeom_classification.yaml
-```
-
-Pre-train from scratch (multi-GPU, expects all five pre-training datasets prepared as in [DATASET.md](./DATASET.md)):
-```
-python -m bimjepa fit \
-    -c configs/BIM-JEPA/pretraining/combined_pretrain_original.yaml
-```
-
-For HPC users, example PBS scripts are provided in [`BIM-JEPA/compute/`](./BIM-JEPA/compute/) — see [`BIM-JEPA/compute/README.md`](./BIM-JEPA/compute/README.md) for details.
-
-### Quick Demo
-For a no-install Colab walkthrough that downloads a fine-tuned model and runs inference on sample point clouds, see [`BIM_JEPA_demo.ipynb`](./BIM_JEPA_demo.ipynb).
-
-
-## License
-MIT License
-
-## Citation
-If you find our work useful in your research, please consider citing: 
-```
-in progress
-```
-
-## Acknowledgements
-We sincerely thank the authors of Point-JEPA, SpaRSE-BIM/IFCNet, and BIMGEOM for making their code/data and models publicly available, which served as the foundation for this work. If you use our work, please also consider citing these papers.
+## Website License
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.

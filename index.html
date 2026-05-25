@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="Self-supervised learning for BIM element classification using a joint embedding predictive architecture">
+  <meta property="og:title" content="Self-supervised learning for BIM element classification using a joint embedding predictive architecture"/>
+  <meta property="og:description" content="A self-supervised Joint Embedding Predictive Architecture for BIM element classification from unlabeled 3D point cloud geometry."/>
+  <meta property="og:url" content="/bim-jepa/"/>
+  <meta property="og:image" content="static/images/cover.png" />
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+
+
+  <meta name="twitter:title" content="Self-supervised learning for BIM element classification using a joint embedding predictive architecture">
+  <meta name="twitter:description" content="A self-supervised Joint Embedding Predictive Architecture for BIM element classification from unlabeled 3D point cloud geometry.">
+  <meta name="twitter:image" content="static/images/cover.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- Keywords for your paper to be indexed by-->
+  <meta name="keywords" content="BIM, self-supervised learning, JEPA, point cloud, element classification">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <title>Self-supervised learning for BIM element classification using a joint embedding predictive architecture</title>
+  <link rel="icon" type="image/png" href="static/images/icon.png">
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+  rel="stylesheet">
+
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script src="static/js/bulma-carousel.min.js"></script>
+  <script src="static/js/bulma-slider.min.js"></script>
+  <script src="static/js/index.js"></script>
+</head>
+<body>
+
+
+  <section class="hero">
+    <div class="hero-body" style="padding-bottom: 0;">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-2 publication-title">[Automation in Construction] Self-supervised learning for BIM element classification using a joint embedding predictive architecture (Under Review)</h1>
+
+            <div class="is-size-5 publication-authors">
+              <span>Jack Wei Lun Shi<sup>1</sup>,</span>
+              <span>Wawan Solihin<sup>1,2</sup>,</span>
+              <span>Yufeng Weng<sup>1</sup>,</span>
+              <span>Yimin Zhao<sup>1</sup>,</span>
+              <span><br>Leong Hien Poh<sup>1</sup>,</span>
+              <span>Justin Ker-Wei Yeoh<sup>1</sup></span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><br><sup>1</sup>Department of Civil and Environmental Engineering, National University of Singapore</span>
+              <span class="author-block"><sup>2</sup>Research and Innovation, NovaCITYNETS Pte.Ltd.</span>
+            </div>
+
+            <div class="column has-text-centered">
+
+              <!-- Paper link -->
+              <span class="link-block">
+                <a href="#" target="_blank"
+                class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="far fa-file"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+
+              <!-- Model weight link -->
+              <span class="link-block">
+                <a href="https://github.com/jackswl/bim-jepa/blob/main/DATASET.md" target="_blank"
+                  class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="fas fa-database"></i>
+                  </span>
+                  <span>Data</span>
+                </a>
+              </span>
+
+              <!-- Training code link -->
+              <span class="link-block">
+                <a href="https://github.com/jackswl/bim-jepa" target="_blank"
+                class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                </a>
+              </span>
+
+              <!-- Inference demo link -->
+              <span class="link-block">
+                <a href="https://github.com/jackswl/bim-jepa" target="_blank"
+                class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="fas fa-play-circle"></i>
+                  </span>
+                  <span>Demo</span>
+                </a>
+              </span>
+
+              <!-- Hugging Face link -->
+              <span class="link-block">
+                <a href="#" target="_blank"
+                class="external-link button is-normal is-rounded is-warning">
+                  <span class="icon">🤗</span>
+                  <span class="has-text-white">Hugging Face</span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+
+<!-- Teaser image -->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body" style="padding-top: 24px;">
+      <img src="static/images/cover.png" alt="BIM-JEPA teaser"/>
+        <h2 class="subtitle has-text-centered">
+          More details, including all training code and model weights, will be released upon acceptance of the paper. Thank you for your interest!
+        </h2>
+    </div>
+  </div>
+</section>
+<!-- End teaser image -->
+
+<!-- Paper abstract -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            The development of scalable models for automated Building Information Modeling (BIM) element classification is hindered by the reliance on supervised learning, which requires expensive and laborious manual data annotation. This paper introduces a pre-trained model that leverages a Joint Embedding Predictive Architecture for self-supervised learning on unlabeled 3D point cloud representations of individual BIM elements. By predicting the latent representations of masked regions of element geometry, the proposed model learns rich geometric features that achieve competitive accuracy on a downstream classification task, outperforming existing supervised methods without heavy data augmentation, while excelling in data-scarce scenarios. This paper mitigates the data annotation bottleneck and establishes a path toward developing a foundation model for BIM geometry, enabling more scalable, data-efficient, and generalizable representation learning in the Architecture, Engineering, and Construction domain.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End paper abstract -->
+
+<!-- Figure carousel -->
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item">
+          <img class="carousel-figure" src="static/images/figure4.png" alt="Figure 4"/>
+          <h2 class="subtitle has-text-centered carousel-caption">
+            Fig. 4. Visualization of the context blocks and target blocks of various BIM elements. For each training sample, the ratio range for the target block is 0.15 to 0.2, while the ratio range for the context block is 0.4 to 0.75. The indices of patch embeddings chosen for the context differ from those for the targets to avoid trivial solutions.
+          </h2>
+        </div>
+
+        <div class="item">
+          <img class="carousel-figure" src="static/images/figure10.svg" alt="Figure 10"/>
+          <h2 class="subtitle has-text-centered carousel-caption">
+            Fig. 10. PCA visualization of learned representations from various models. Top row starting from left: a) prelogits from DGCNN, b) MeshNet, and c) MVCNN respectively. Bottom row starting from left: d) context encoder from pre-trained BIM-JEPA, e) context encoder from fine-tuned BIM-JEPA, and f) prelogits from fine-tuned BIM-JEPA.
+          </h2>
+        </div>
+
+        <div class="item">
+          <img class="carousel-figure" src="static/images/figure1.png" alt="Figure 1"/>
+          <h2 class="subtitle has-text-centered carousel-caption">
+            Fig. 1. Differences between other approaches and our approach.
+          </h2>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End figure carousel -->
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+            This website is licensed under a <a rel="license"  href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Statcounter tracking code -->
+
+<!-- You can add a tracker to track page visits by creating an account at statcounter.com -->
+
+    <!-- End of Statcounter Code -->
+
+  </body>
+  </html>

@@ -1,2 +1,0 @@
-epoch,step,test/avg_time_per_sample_ms,test/f1_score,test/mean_class_accuracy,test/overall_accuracy,test/precision,test/recall,test/samples_per_second,test/total_inference_time_sec
-0,0,16.89082908630371,0.891981840133667,0.8952650427818298,0.9243243336677551,0.8905173540115356,0.8952650427818298,59.20372772216797,34.37283706665039

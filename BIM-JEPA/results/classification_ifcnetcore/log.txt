@@ -1,113 +1,0 @@
-Active Conda Environment:
-
-# conda environments:
-#
-base                   /app/apps/miniforge3/25.3.1
-dinojepa3            * /home/users/nus/xxxxxxxx/.conda/envs/dinojepa3
-dinojepa4              /home/users/nus/xxxxxxxx/.conda/envs/dinojepa4
-
-IFCNetCoreDataModule setup complete:
- - Found 20 classes.
- - Train samples: 5551
- - Validation samples: 0
- - Test samples: 2379
-Loading pretrained checkpoint from '/home/users/nus/xxxxxxxx/jepa/artifacts/lightning_logs/version_309/checkpoints/last.ckpt'.
-Missing keys: ['cls_head.0.weight', 'cls_head.1.weight', 'cls_head.1.bias', 'cls_head.1.running_mean', 'cls_head.1.running_var', 'cls_head.4.weight', 'cls_head.5.weight', 'cls_head.5.bias', 'cls_head.5.running_mean', 'cls_head.5.running_var', 'cls_head.8.weight', 'cls_head.8.bias']
-Unexpected keys: ['predictor.mask_token', 'predictor.predictor_embed.weight', 'predictor.predictor_embed.bias', 'predictor.positional_encoding.0.weight', 'predictor.positional_encoding.0.bias', 'predictor.positional_encoding.2.weight', 'predictor.positional_encoding.2.bias', 'predictor.predictor_norm.weight', 'predictor.predictor_norm.bias', 'predictor.predictor_proj.weight', 'predictor.predictor_proj.bias', 'predictor.predictor.blocks.0.norm1.weight', 'predictor.predictor.blocks.0.norm1.bias', 'predictor.predictor.blocks.0.attn.qkv.weight', 'predictor.predictor.blocks.0.attn.qkv.bias', 'predictor.predictor.blocks.0.attn.proj.weight', 'predictor.predictor.blocks.0.attn.proj.bias', 'predictor.predictor.blocks.0.norm2.weight', 'predictor.predictor.blocks.0.norm2.bias', 'predictor.predictor.blocks.0.mlp.fc1.weight', 'predictor.predictor.blocks.0.mlp.fc1.bias', 'predictor.predictor.blocks.0.mlp.fc2.weight', 'predictor.predictor.blocks.0.mlp.fc2.bias', 'predictor.predictor.blocks.1.norm1.weight', 'predictor.predictor.blocks.1.norm1.bias', 'predictor.predictor.blocks.1.attn.qkv.weight', 'predictor.predictor.blocks.1.attn.qkv.bias', 'predictor.predictor.blocks.1.attn.proj.weight', 'predictor.predictor.blocks.1.attn.proj.bias', 'predictor.predictor.blocks.1.norm2.weight', 'predictor.predictor.blocks.1.norm2.bias', 'predictor.predictor.blocks.1.mlp.fc1.weight', 'predictor.predictor.blocks.1.mlp.fc1.bias', 'predictor.predictor.blocks.1.mlp.fc2.weight', 'predictor.predictor.blocks.1.mlp.fc2.bias', 'predictor.predictor.blocks.2.norm1.weight', 'predictor.predictor.blocks.2.norm1.bias', 'predictor.predictor.blocks.2.attn.qkv.weight', 'predictor.predictor.blocks.2.attn.qkv.bias', 'predictor.predictor.blocks.2.attn.proj.weight', 'predictor.predictor.blocks.2.attn.proj.bias', 'predictor.predictor.blocks.2.norm2.weight', 'predictor.predictor.blocks.2.norm2.bias', 'predictor.predictor.blocks.2.mlp.fc1.weight', 'predictor.predictor.blocks.2.mlp.fc1.bias', 'predictor.predictor.blocks.2.mlp.fc2.weight', 'predictor.predictor.blocks.2.mlp.fc2.bias', 'predictor.predictor.blocks.3.norm1.weight', 'predictor.predictor.blocks.3.norm1.bias', 'predictor.predictor.blocks.3.attn.qkv.weight', 'predictor.predictor.blocks.3.attn.qkv.bias', 'predictor.predictor.blocks.3.attn.proj.weight', 'predictor.predictor.blocks.3.attn.proj.bias', 'predictor.predictor.blocks.3.norm2.weight', 'predictor.predictor.blocks.3.norm2.bias', 'predictor.predictor.blocks.3.mlp.fc1.weight', 'predictor.predictor.blocks.3.mlp.fc1.bias', 'predictor.predictor.blocks.3.mlp.fc2.weight', 'predictor.predictor.blocks.3.mlp.fc2.bias', 'predictor.predictor.blocks.4.norm1.weight', 'predictor.predictor.blocks.4.norm1.bias', 'predictor.predictor.blocks.4.attn.qkv.weight', 'predictor.predictor.blocks.4.attn.qkv.bias', 'predictor.predictor.blocks.4.attn.proj.weight', 'predictor.predictor.blocks.4.attn.proj.bias', 'predictor.predictor.blocks.4.norm2.weight', 'predictor.predictor.blocks.4.norm2.bias', 'predictor.predictor.blocks.4.mlp.fc1.weight', 'predictor.predictor.blocks.4.mlp.fc1.bias', 'predictor.predictor.blocks.4.mlp.fc2.weight', 'predictor.predictor.blocks.4.mlp.fc2.bias', 'predictor.predictor.blocks.5.norm1.weight', 'predictor.predictor.blocks.5.norm1.bias', 'predictor.predictor.blocks.5.attn.qkv.weight', 'predictor.predictor.blocks.5.attn.qkv.bias', 'predictor.predictor.blocks.5.attn.proj.weight', 'predictor.predictor.blocks.5.attn.proj.bias', 'predictor.predictor.blocks.5.norm2.weight', 'predictor.predictor.blocks.5.norm2.bias', 'predictor.predictor.blocks.5.mlp.fc1.weight', 'predictor.predictor.blocks.5.mlp.fc1.bias', 'predictor.predictor.blocks.5.mlp.fc2.weight', 'predictor.predictor.blocks.5.mlp.fc2.bias', 'predictor.predictor.norm.weight', 'predictor.predictor.norm.bias']
-Testing: |          | 0/? [00:00<?, ?it/s]Testing:   0%|          | 0/75 [00:00<?, ?it/s]Testing DataLoader 0:   0%|          | 0/75 [00:00<?, ?it/s]Testing DataLoader 0:   1%|▏         | 1/75 [00:01<01:37,  0.76it/s]Testing DataLoader 0:   3%|▎         | 2/75 [00:01<00:48,  1.50it/s]Testing DataLoader 0:   4%|▍         | 3/75 [00:01<00:32,  2.22it/s]Testing DataLoader 0:   5%|▌         | 4/75 [00:01<00:24,  2.93it/s]Testing DataLoader 0:   7%|▋         | 5/75 [00:01<00:19,  3.62it/s]Testing DataLoader 0:   8%|▊         | 6/75 [00:01<00:16,  4.30it/s]Testing DataLoader 0:   9%|▉         | 7/75 [00:01<00:13,  4.96it/s]Testing DataLoader 0:  11%|█         | 8/75 [00:01<00:11,  5.61it/s]Testing DataLoader 0:  12%|█▏        | 9/75 [00:01<00:10,  6.25it/s]Testing DataLoader 0:  13%|█▎        | 10/75 [00:01<00:09,  6.87it/s]Testing DataLoader 0:  15%|█▍        | 11/75 [00:01<00:08,  7.49it/s]Testing DataLoader 0:  16%|█▌        | 12/75 [00:01<00:07,  8.09it/s]Testing DataLoader 0:  17%|█▋        | 13/75 [00:01<00:07,  8.68it/s]Testing DataLoader 0:  19%|█▊        | 14/75 [00:01<00:06,  9.25it/s]Testing DataLoader 0:  20%|██        | 15/75 [00:01<00:06,  9.78it/s]Testing DataLoader 0:  21%|██▏       | 16/75 [00:01<00:05, 10.33it/s]Testing DataLoader 0:  23%|██▎       | 17/75 [00:01<00:05, 10.88it/s]Testing DataLoader 0:  24%|██▍       | 18/75 [00:01<00:04, 11.41it/s]Testing DataLoader 0:  25%|██▌       | 19/75 [00:01<00:04, 11.94it/s]Testing DataLoader 0:  27%|██▋       | 20/75 [00:01<00:04, 12.46it/s]Testing DataLoader 0:  28%|██▊       | 21/75 [00:01<00:04, 12.97it/s]Testing DataLoader 0:  29%|██▉       | 22/75 [00:01<00:03, 13.47it/s]Testing DataLoader 0:  31%|███       | 23/75 [00:01<00:03, 13.97it/s]Testing DataLoader 0:  32%|███▏      | 24/75 [00:01<00:03, 14.45it/s]Testing DataLoader 0:  33%|███▎      | 25/75 [00:01<00:03, 14.93it/s]Testing DataLoader 0:  35%|███▍      | 26/75 [00:01<00:03, 15.40it/s]Testing DataLoader 0:  36%|███▌      | 27/75 [00:01<00:03, 15.86it/s]Testing DataLoader 0:  37%|███▋      | 28/75 [00:01<00:02, 16.31it/s]Testing DataLoader 0:  39%|███▊      | 29/75 [00:02<00:03, 13.63it/s]Testing DataLoader 0:  40%|████      | 30/75 [00:02<00:03, 14.00it/s]Testing DataLoader 0:  41%|████▏     | 31/75 [00:02<00:03, 14.08it/s]Testing DataLoader 0:  43%|████▎     | 32/75 [00:02<00:02, 14.44it/s]Testing DataLoader 0:  44%|████▍     | 33/75 [00:02<00:03, 14.00it/s]Testing DataLoader 0:  45%|████▌     | 34/75 [00:02<00:02, 14.34it/s]Testing DataLoader 0:  47%|████▋     | 35/75 [00:02<00:02, 14.67it/s]Testing DataLoader 0:  48%|████▊     | 36/75 [00:02<00:02, 14.62it/s]Testing DataLoader 0:  49%|████▉     | 37/75 [00:02<00:02, 14.94it/s]Testing DataLoader 0:  51%|█████     | 38/75 [00:02<00:02, 15.15it/s]Testing DataLoader 0:  52%|█████▏    | 39/75 [00:02<00:02, 15.45it/s]Testing DataLoader 0:  53%|█████▎    | 40/75 [00:02<00:02, 14.89it/s]Testing DataLoader 0:  55%|█████▍    | 41/75 [00:02<00:02, 14.88it/s]Testing DataLoader 0:  56%|█████▌    | 42/75 [00:02<00:02, 15.17it/s]Testing DataLoader 0:  57%|█████▋    | 43/75 [00:03<00:02, 13.97it/s]Testing DataLoader 0:  59%|█████▊    | 44/75 [00:03<00:02, 13.01it/s]Testing DataLoader 0:  60%|██████    | 45/75 [00:03<00:02, 12.49it/s]Testing DataLoader 0:  61%|██████▏   | 46/75 [00:03<00:02, 12.72it/s]Testing DataLoader 0:  63%|██████▎   | 47/75 [00:03<00:02, 12.76it/s]Testing DataLoader 0:  64%|██████▍   | 48/75 [00:03<00:02, 12.98it/s]Testing DataLoader 0:  65%|██████▌   | 49/75 [00:03<00:01, 13.19it/s]Testing DataLoader 0:  67%|██████▋   | 50/75 [00:03<00:01, 13.41it/s]Testing DataLoader 0:  68%|██████▊   | 51/75 [00:03<00:01, 13.63it/s]Testing DataLoader 0:  69%|██████▉   | 52/75 [00:04<00:01, 12.73it/s]Testing DataLoader 0:  71%|███████   | 53/75 [00:04<00:01, 12.93it/s]Testing DataLoader 0:  72%|███████▏  | 54/75 [00:04<00:01, 13.13it/s]Testing DataLoader 0:  73%|███████▎  | 55/75 [00:04<00:01, 13.32it/s]Testing DataLoader 0:  75%|███████▍  | 56/75 [00:04<00:01, 13.51it/s]Testing DataLoader 0:  76%|███████▌  | 57/75 [00:04<00:01, 13.44it/s]Testing DataLoader 0:  77%|███████▋  | 58/75 [00:04<00:01, 13.63it/s]Testing DataLoader 0:  79%|███████▊  | 59/75 [00:04<00:01, 13.18it/s]Testing DataLoader 0:  80%|████████  | 60/75 [00:04<00:01, 13.19it/s]Testing DataLoader 0:  81%|████████▏ | 61/75 [00:04<00:01, 12.81it/s]Testing DataLoader 0:  83%|████████▎ | 62/75 [00:04<00:01, 12.98it/s]Testing DataLoader 0:  84%|████████▍ | 63/75 [00:04<00:00, 13.15it/s]Testing DataLoader 0:  85%|████████▌ | 64/75 [00:04<00:00, 13.32it/s]Testing DataLoader 0:  87%|████████▋ | 65/75 [00:04<00:00, 13.48it/s]Testing DataLoader 0:  88%|████████▊ | 66/75 [00:04<00:00, 13.28it/s]Testing DataLoader 0:  89%|████████▉ | 67/75 [00:04<00:00, 13.44it/s]Testing DataLoader 0:  91%|█████████ | 68/75 [00:05<00:00, 13.60it/s]Testing DataLoader 0:  92%|█████████▏| 69/75 [00:05<00:00, 13.76it/s]Testing DataLoader 0:  93%|█████████▎| 70/75 [00:05<00:00, 13.92it/s]Testing DataLoader 0:  95%|█████████▍| 71/75 [00:05<00:00, 13.73it/s]Testing DataLoader 0:  96%|█████████▌| 72/75 [00:05<00:00, 13.38it/s]Testing DataLoader 0:  97%|█████████▋| 73/75 [00:05<00:00, 13.53it/s]Testing DataLoader 0:  99%|█████████▊| 74/75 [00:05<00:00, 13.17it/s]Testing DataLoader 0: 100%|██████████| 75/75 [00:05<00:00, 13.12it/s]
-========================================
-            TEST RESULTS
-========================================
-Overall Accuracy:         0.8937
-Mean Class Accuracy:      0.8663
-Precision (Macro):        0.8938
-Recall (Macro):           0.8663
-F1 Score (Macro):         0.8769
-----------------------------------------
---- Per-Class Accuracy ---
-- IfcAirTerminal           : 0.9366
-- IfcBeam                  : 0.7500
-- IfcCableCarrierFitting   : 0.9419
-- IfcCableCarrierSegment   : 0.8868
-- IfcDoor                  : 0.9892
-- IfcDuctFitting           : 0.9128
-- IfcDuctSegment           : 0.8302
-- IfcFurniture             : 0.9254
-- IfcLamp                  : 0.7407
-- IfcOutlet                : 0.6111
-- IfcPipeFitting           : 0.9485
-- IfcPipeSegment           : 0.9487
-- IfcPlate                 : 0.8280
-- IfcRailing               : 0.9606
-- IfcSanitaryTerminal      : 0.9044
-- IfcSlab                  : 0.8750
-- IfcSpaceHeater           : 0.5789
-- IfcStair                 : 1.0000
-- IfcValve                 : 0.8750
-- IfcWall                  : 0.8820
-
-========================================
-          INFERENCE SPEED RESULTS
-========================================
-Total Samples Processed:  2379
-Total Inference Time:     1.1730 seconds
-Avg. Time per Sample:     0.4931 ms
-Samples per Second (FPS): 2028.18
-========================================
-
---- Confusion Matrix ---
-tensor([[133,   0,   0,   0,   0,   1,   2,   1,   0,   1,   1,   0,   0,   0,
-           1,   1,   0,   0,   0,   1],
-        [  3,  63,   0,   3,   0,   0,   3,   0,   0,   0,   0,   1,   0,   3,
-           0,   4,   1,   0,   0,   3],
-        [  0,   2, 146,   0,   0,   0,   3,   0,   0,   0,   2,   2,   0,   0,
-           0,   0,   0,   0,   0,   0],
-        [  0,   0,   1, 141,   0,   0,   6,   0,   0,   0,   0,   5,   0,   0,
-           1,   4,   1,   0,   0,   0],
-        [  0,   0,   0,   0,  92,   0,   0,   0,   1,   0,   0,   0,   0,   0,
-           0,   0,   0,   0,   0,   0],
-        [  1,   0,   2,   0,   0, 178,   2,   1,   0,   0,   4,   0,   0,   1,
-           0,   2,   0,   0,   0,   4],
-        [  1,   0,   1,   5,   0,   2, 132,   0,   0,   0,   0,  11,   0,   0,
-           1,   3,   1,   0,   0,   2],
-        [  1,   0,   1,   0,   0,   0,   0,  62,   0,   0,   0,   0,   0,   0,
-           2,   1,   0,   0,   0,   0],
-        [  1,   0,   0,   0,   0,   0,   3,   1,  20,   0,   0,   0,   0,   0,
-           1,   0,   0,   0,   1,   0],
-        [  0,   0,   0,   0,   0,   2,   0,   1,   0,  11,   0,   0,   0,   0,
-           3,   0,   0,   0,   0,   1],
-        [  3,   0,   2,   0,   0,   1,   0,   0,   0,   0, 184,   2,   0,   0,
-           0,   0,   0,   0,   2,   0],
-        [  0,   0,   0,   2,   0,   0,   4,   0,   0,   0,   1, 185,   0,   0,
-           3,   0,   0,   0,   0,   0],
-        [  0,   1,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, 130,   0,
-           0,  16,   1,   1,   0,   8],
-        [  0,   0,   0,   1,   0,   0,   0,   0,   0,   0,   0,   0,   0, 122,
-           2,   0,   0,   0,   0,   2],
-        [  2,   0,   1,   0,   1,   1,   1,   1,   0,   0,   0,   2,   0,   0,
-         123,   0,   1,   0,   3,   0],
-        [  0,   1,   0,   6,   0,   0,   1,   0,   0,   0,   0,   0,   6,   0,
-           0, 133,   4,   0,   0,   1],
-        [  0,   0,   0,   0,   0,   0,   2,   0,   0,   0,   0,   0,   0,   0,
-           0,   8,  22,   0,   0,   6],
-        [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-           0,   0,   0,  16,   0,   0],
-        [  3,   0,   0,   0,   0,   0,   0,   1,   0,   0,   9,   0,   0,   0,
-           0,   0,   0,   0,  91,   0],
-        [  0,   2,   0,   1,   1,   4,   0,   0,   0,   0,   0,   0,   6,   0,
-           0,   1,   4,   0,   0, 142]])
-========================================
-
-Testing DataLoader 0: 100%|██████████| 75/75 [00:06<00:00, 11.20it/s]
-────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-         Test metric                 DataLoader 0
-────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
- test/avg_time_per_sample_ms       0.493054062128067
-        test/f1_score             0.8769094944000244
-  test/mean_class_accuracy        0.8663001656532288
-    test/overall_accuracy         0.8936527967453003
-       test/precision             0.8938217759132385
-         test/recall              0.8663001656532288
-   test/samples_per_second        2028.1751708984375
-test/total_inference_time_sec     1.1729756593704224
-────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
