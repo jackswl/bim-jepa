@@ -49,7 +49,7 @@
         <div class="columns is-centered">
           <div class="column has-text-centered">
             <h1 class="title is-2 publication-title"><strong>Self-supervised learning for BIM element classification using a joint embedding predictive architecture</strong></h1>
-            <h1 class="title is-2 publication-title"><span style="font-size: 0.8em; color: #777;">Automation in Construction</span></h1>
+            <h1 class="title is-2 publication-title"><span style="font-size: 0.7em; color: #999;">Automation in Construction</span></h1>
 
             <div class="is-size-5 publication-authors">
               <span>Jack Wei Lun Shi<sup>1</sup>,</span>
@@ -116,7 +116,7 @@
                 <a href="https://huggingface.co/collections/llama2thedog/bim-jepa-paper-model-weights" target="_blank"
                 class="external-link button is-normal is-rounded is-warning">
                   <span class="icon">🤗</span>
-                  <span class="has-text-white">Weights</span>
+                  <span class="has-text-black">Weights</span>
                 </a>
               </span>
             </div>
@@ -156,8 +156,15 @@
 <!-- Figure carousel -->
 <section class="hero is-small">
   <div class="hero-body">
-    <div class="container">
+    <div class="container is-max-desktop">
       <div id="results-carousel" class="carousel results-carousel">
+        <div class="item">
+          <img class="carousel-figure" src="static/images/figure1.png" alt="Figure 1"/>
+          <h2 class="subtitle has-text-centered carousel-caption">
+            Fig. 1. Differences between other approaches and our approach.
+          </h2>
+        </div>
+
         <div class="item">
           <img class="carousel-figure" src="static/images/figure4.png" alt="Figure 4"/>
           <h2 class="subtitle has-text-centered carousel-caption">
@@ -169,13 +176,6 @@
           <img class="carousel-figure" src="static/images/figure10.svg" alt="Figure 10"/>
           <h2 class="subtitle has-text-centered carousel-caption">
             Fig. 10. PCA visualization of learned representations from various models. Top row starting from left: a) prelogits from DGCNN, b) MeshNet, and c) MVCNN respectively. Bottom row starting from left: d) context encoder from pre-trained BIM-JEPA, e) context encoder from fine-tuned BIM-JEPA, and f) prelogits from fine-tuned BIM-JEPA.
-          </h2>
-        </div>
-
-        <div class="item">
-          <img class="carousel-figure" src="static/images/figure1.png" alt="Figure 1"/>
-          <h2 class="subtitle has-text-centered carousel-caption">
-            Fig. 1. Differences between other approaches and our approach.
           </h2>
         </div>
       </div>
