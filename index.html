@@ -153,36 +153,156 @@
 </section>
 <!-- End paper abstract -->
 
-<!-- Figure carousel -->
-<section class="hero is-small">
-  <div class="hero-body">
-    <div class="container is-max-desktop">
-      <div id="results-carousel" class="carousel results-carousel">
-        <div class="item">
-          <img class="carousel-figure" src="static/images/figure1.png" alt="Figure 1"/>
-          <h2 class="subtitle has-text-centered carousel-caption">
-            Fig. 1. Differences between other approaches and our approach.
-          </h2>
-        </div>
-
-        <div class="item">
-          <img class="carousel-figure" src="static/images/figure4.png" alt="Figure 4"/>
-          <h2 class="subtitle has-text-centered carousel-caption">
-            Fig. 4. Visualization of the context blocks and target blocks of various BIM elements. For each training sample, the ratio range for the target block is 0.15 to 0.2, while the ratio range for the context block is 0.4 to 0.75. The indices of patch embeddings chosen for the context differ from those for the targets to avoid trivial solutions.
-          </h2>
-        </div>
-
-        <div class="item">
-          <img class="carousel-figure" src="static/images/figure10.svg" alt="Figure 10"/>
-          <h2 class="subtitle has-text-centered carousel-caption">
-            Fig. 10. PCA visualization of learned representations from various models. Top row starting from left: a) prelogits from DGCNN, b) MeshNet, and c) MVCNN respectively. Bottom row starting from left: d) context encoder from pre-trained BIM-JEPA, e) context encoder from fine-tuned BIM-JEPA, and f) prelogits from fine-tuned BIM-JEPA.
-          </h2>
-        </div>
-      </div>
+<!-- Walkthrough: Why pre-train -->
+<section class="section walkthrough">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Why pre-train a model for BIM geometry?</h2>
+    <div class="content has-text-justified">
+      <p>
+        The development of scalable models for automated BIM element classification is hindered by the reliance on supervised learning, which requires expensive and laborious manual data annotation. BIM-JEPA introduces a pre-trained model that leverages a Joint Embedding Predictive Architecture for self-supervised learning on unlabeled 3D point cloud representations of individual BIM elements. Unlike conventional approaches, which train separate and task-specific models from scratch, a single pre-trained model can be efficiently fine-tuned for a wide range of downstream tasks.
+      </p>
     </div>
+    <figure class="walkthrough-figure">
+      <img src="static/images/figure1.png" alt="Differences between other approaches and our approach"/>
+      <figcaption>Fig. 1. Differences between other approaches and our approach.</figcaption>
+    </figure>
   </div>
 </section>
-<!-- End figure carousel -->
+
+<!-- Walkthrough: How it works -->
+<section class="section walkthrough">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">How BIM-JEPA learns</h2>
+    <div class="content has-text-justified">
+      <p>
+        BIM-JEPA learns by predicting the embeddings of masked portions of a BIM element from a given context, entirely within a shared latent space. From an ordered sequence of geometric patches, the model samples one larger context block and four smaller target blocks. The context block represents a partial view of the object (i.e., 40% to 75% of the patch embeddings), while the target blocks represent different masked regions (i.e., 15% to 20% of the patch embeddings) that the model must predict. The indices of patch embeddings chosen for the context differ from those for the targets to avoid trivial solutions. Predicting in the latent space rather than reconstructing raw points lets the model focus on high-level geometry and avoids the need for heavy data augmentation.
+      </p>
+    </div>
+    <figure class="walkthrough-figure">
+      <img src="static/images/figure4.png" alt="Visualization of context blocks and target blocks of various BIM elements"/>
+      <figcaption>Fig. 4. Visualization of the context blocks and target blocks of various BIM elements.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- Walkthrough: Dataset -->
+<section class="section walkthrough">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Datasets</h2>
+    <div class="content has-text-justified">
+      <p>
+        BIM-JEPA is pre-trained on 907,349 samples of individual BIM elements, drawn from three large-scale sources of real-world IFC/BIM geometry. Although these are labeled datasets, the labels were not used for the pre-training task. For the downstream classification task, the model is evaluated on two datasets: IFCNetCore, a curated subset of 20 balanced classes that provides a standard for general classification accuracy, and BIMGEOM, a more imbalanced set of 13 classes that assesses the robustness and generalization capabilities of the model.
+      </p>
+    </div>
+    <figure class="walkthrough-figure">
+      <img src="static/images/figure6.png" alt="Point cloud samples from BIMGEOM and IFCNetCore"/>
+      <figcaption>Fig. 6. a) Point cloud samples from BIMGEOM with 13 classes and b) point cloud samples from IFCNetCore with 20 classes.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- Walkthrough: Results -->
+<section class="section walkthrough">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Results</h2>
+
+    <div class="content has-text-justified">
+      <p>
+        BIM-JEPA establishes the best performance across all metrics on IFCNetCore. The model achieves an overall accuracy of 89.37% and a mean class accuracy of 86.63%, surpassing all baseline methods with minimal data augmentation during the fine-tuning phase (i.e., only scaling), thus relying primarily on the rich features learned during pre-training.
+      </p>
+    </div>
+    <div class="result-table-wrap">
+      <table class="table is-bordered is-hoverable result-table">
+        <caption>Table 2. Accuracy metrics on IFCNetCore.</caption>
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Overall Acc. (%)</th>
+            <th>Mean Class Acc. (%)</th>
+            <th>Precision</th>
+            <th>Recall</th>
+            <th>F1</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>MVCNN</td><td>86.97</td><td>85.54</td><td>87.48</td><td>86.97</td><td>86.93</td></tr>
+          <tr><td>MeshNet</td><td>85.75</td><td>83.32</td><td>86.45</td><td>85.75</td><td>85.72</td></tr>
+          <tr><td>DGCNN</td><td>82.30</td><td>79.11</td><td>83.26</td><td>82.30</td><td>82.15</td></tr>
+          <tr><td>SpaRSE-BIM</td><td>81.59</td><td>83.02</td><td>82.78</td><td>81.59</td><td>81.80</td></tr>
+          <tr class="is-ours"><td>BIM-JEPA</td><td>89.37</td><td>86.63</td><td>89.38</td><td>89.37</td><td>87.69</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="content has-text-justified" style="margin-top: 2rem;">
+      <p>
+        On the more imbalanced BIMGEOM dataset, BIM-JEPA attains 92.43% overall accuracy and 89.53% mean class accuracy, exceeding SpaRSE-BIM (i.e., 90.47% and 87.66% respectively). On weighted average metrics, BIM-JEPA surpasses SpaRSE-BIM across precision, recall, and F1, while its stronger macro average performance indicates more even performance across under-represented BIM elements.
+      </p>
+    </div>
+    <div class="result-table-wrap">
+      <table class="table is-bordered is-hoverable result-table">
+        <caption>Table 4. Accuracy metrics on BIMGEOM.</caption>
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Overall Acc. (%)</th>
+            <th>Mean Class Acc. (%)</th>
+            <th>Macro Avg. (P / R / F1)</th>
+            <th>Weighted Avg. (P / R / F1)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Mesh to Graph</td><td>85</td><td>76</td><td>&ndash;</td><td>&ndash;</td></tr>
+          <tr><td>5-NN Graph</td><td>83</td><td>78</td><td>&ndash;</td><td>&ndash;</td></tr>
+          <tr><td>SpaRSE-BIM</td><td>90.47</td><td>87.66</td><td>84.70 / 87.66 / 85.78</td><td>91.43 / 90.47 / 90.77</td></tr>
+          <tr class="is-ours"><td>BIM-JEPA</td><td>92.43</td><td>89.53</td><td>89.05 / 89.53 / 89.20</td><td>92.57 / 92.43 / 92.44</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="title is-4 has-text-centered subblock-title">Quality of the learned representations</h3>
+    <div class="content has-text-justified">
+      <p>
+        To provide qualitative insight into the structure of the learned feature spaces, the test-set embeddings are projected onto a two-dimensional plane using Principal Component Analysis (PCA), with the background regions representing the linear decision boundaries learned by an SVM. The pre-trained encoder yields features that appear as a single, undifferentiated cluster, typical of a self-supervised model before it has been adapted to a downstream task. Upon fine-tuning, this structure becomes visually apparent: the features coalesce into distinct class-specific groups, culminating in the fine-tuned prelogits which form tighter, denser, and separated clusters compared to other models.
+      </p>
+    </div>
+    <figure class="walkthrough-figure">
+      <img src="static/images/figure10.svg" alt="PCA visualization of learned representations from various models"/>
+      <figcaption>Fig. 10. PCA visualization of learned representations from various models. Top row: a) DGCNN, b) MeshNet, c) MVCNN. Bottom row: d) pre-trained BIM-JEPA encoder, e) fine-tuned BIM-JEPA encoder, f) fine-tuned BIM-JEPA prelogits.</figcaption>
+    </figure>
+
+    <h3 class="title is-4 has-text-centered subblock-title">Performance in low-data regimes</h3>
+    <div class="content has-text-justified">
+      <p>
+        The data efficiency curves demonstrate that the model is highly sample-efficient, capturing a large fraction of its final performance with only a small subset of the labeled data. Notably, with just 25% of the training set, BIM-JEPA reaches a mean overall accuracy of approximately 75% on IFCNetCore and 82% on BIMGEOM. This rapid convergence strongly suggests that the self-supervised pre-training effectively equips the model with robust and generalizable representations, thereby reducing its dependency on extensive labeled datasets for the downstream task.
+      </p>
+    </div>
+    <figure class="walkthrough-figure">
+      <img src="static/images/figure11.svg" alt="Data efficiency curves on IFCNetCore and BIMGEOM"/>
+      <figcaption>Fig. 11. Data efficiency curves on IFCNetCore and BIMGEOM averaged over 5 random seeds.</figcaption>
+    </figure>
+    <div class="content has-text-justified" style="margin-top: 2rem;">
+      <p>
+        The N-shot learning experiments further evaluate the ability of BIM-JEPA to generalize from a very small number of labeled training examples per class. For BIMGEOM, the mean overall accuracy steadily climbs from approximately 50% with 5 shots to over 80% with 140 shots. A similar, albeit more compressed, trend is observed on IFCNetCore, where accuracy increases from around 40% to nearly 70% as the number of shots grows from 5 to 36.
+      </p>
+    </div>
+    <figure class="walkthrough-figure">
+      <img src="static/images/figure12.svg" alt="N-shot learning on IFCNetCore and BIMGEOM"/>
+      <figcaption>Fig. 12. N-shot learning on IFCNetCore and BIMGEOM averaged over 5 random seeds.</figcaption>
+    </figure>
+  </div>
+</section>
+<!-- End walkthrough -->
+
+<!-- Closing call-to-action -->
+<section class="section walkthrough">
+  <div class="container is-max-desktop has-text-justified">
+    <p style="font-size: 1.1rem;">
+      That's the big picture! If you're curious about the methodology, experiments, and all the details, come check out the <a href="#">full paper</a>.
+    </p>
+  </div>
+</section>
+<!-- End closing call-to-action -->
 
 <footer class="footer">
   <div class="container">
@@ -190,7 +310,7 @@
       <div class="column is-8">
         <div class="content">
           <p>
-            This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+            This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>.
             This website is licensed under a <a rel="license"  href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
           </p>
         </div>

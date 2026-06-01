@@ -168,7 +168,77 @@ body {
   background: #000000;
 }
 
-.eql-cntrb { 
+.eql-cntrb {
   font-size: smaller;
+}
+
+/* Walkthrough sections */
+/* Match the inset of the top cover image (container is-max-desktop + hero-body's 1.5rem) */
+.walkthrough .container {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+/* Tighten the gap between consecutive white walkthrough sections */
+.walkthrough + .walkthrough {
+  padding-top: 0;
+}
+
+.walkthrough .content {
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.walkthrough-figure {
+  margin: 1.75rem 0 0;
+  text-align: center;
+}
+
+.walkthrough-figure img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  max-height: min(72vh, 760px);
+  object-fit: contain;
+  margin: 0 auto;
+}
+
+.walkthrough-figure figcaption {
+  max-width: 880px;
+  margin: 0.9rem auto 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: #666;
+}
+
+.subblock-title {
+  margin-top: 2.5rem;
+}
+
+/* Result tables */
+.result-table-wrap {
+  overflow-x: auto;
+  margin: 1.5rem 0 0;
+}
+
+.result-table {
+  margin: 0 auto;
+  font-size: 0.95rem;
+}
+
+.result-table caption {
+  caption-side: top;
+  text-align: left;
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0.6rem;
+}
+
+.result-table tbody tr.is-ours {
+  background-color: #f2f6ff;
+}
+
+.result-table tbody tr.is-ours td {
+  font-weight: 700;
 }
 
