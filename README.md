@@ -17,12 +17,13 @@ Published in **Automation in Construction**.
 
 ```bibtex
 @article{shi2026selfsupervised,
-  title = {Self-supervised learning for BIM element classification using a joint embedding predictive architecture},
-  author = {Shi, Jack Wei Lun and Solihin, Wawan and Weng, Yufeng and Zhao, Yimin and Poh, Leong Hien and Yeoh, Justin Ker-Wei},
-  journal = {Automation in Construction},
-  year = {2026},
-  doi = {10.1016/j.autcon.2026.107075},
-  url = {https://doi.org/10.1016/j.autcon.2026.107075}
+  title={Self-supervised learning for BIM element classification using a joint embedding predictive architecture},
+  author={Shi, Jack Wei Lun and Solihin, Wawan and Weng, Yufeng and Zhao, Yimin and Poh, Leong Hien and Yeoh, Justin K.W.},
+  journal={Automation in Construction},
+  volume={190},
+  pages={107075},
+  year={2026},
+  publisher={Elsevier}
 }
 ```
 
