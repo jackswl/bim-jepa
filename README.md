@@ -2,7 +2,7 @@
 
 Created by [Jack Wei Lun Shi](https://jackswl.github.io/)\*, [Wawan Solihin](https://cde.nus.edu.sg/cee/staff/wawan-solihin/), Yufeng Weng, [Yimin Zhao](https://ztony0712.github.io/), [Leong Hien Poh](https://scholar.google.com/citations?user=xZ3x56EAAAAJ&hl=en), [Justin K.W. Yeoh](https://scholar.google.com/citations?user=m9LF49sAAAAJ&hl=en)
 
-[[Automation in Construction]](https://jackswl.github.io/bim-jepa/) [[Project Page]](https://jackswl.github.io/bim-jepa/) [[Model Weights]](#pretrained-models)
+[[Automation in Construction]](https://doi.org/10.1016/j.autcon.2026.107075) [[Project Page]](https://jackswl.github.io/bim-jepa/) [[Model Weights]](#pretrained-models)
 
 This repository contains BIM-JEPA implementation for __Self-supervised learning for BIM element classification using a joint embedding predictive architecture__.
 
@@ -117,7 +117,15 @@ MIT License
 ## Citation
 If you find our work useful in your research, please consider citing: 
 ```
-in progress
+@article{shi2026selfsupervised,
+  title={Self-supervised learning for BIM element classification using a joint embedding predictive architecture},
+  author={Shi, Jack Wei Lun and Solihin, Wawan and Weng, Yufeng and Zhao, Yimin and Poh, Leong Hien and Yeoh, Justin K.W.},
+  journal={Automation in Construction},
+  volume={190},
+  pages={107075},
+  year={2026},
+  publisher={Elsevier}
+}
 ```
 
 ## Acknowledgements
