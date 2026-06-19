@@ -110,6 +110,7 @@ For HPC users, example PBS scripts are provided in [`BIM-JEPA/compute/`](./BIM-J
 ### Quick Demo
 For a no-install Colab walkthrough that downloads a fine-tuned model and runs inference on sample point clouds, see [`BIM_JEPA_demo.ipynb`](./BIM_JEPA_demo.ipynb).
 
+Update 19 Jun 2026: Refer to [`BIM_JEPA_demo_2.ipynb`](./BIM_JEPA_demo_2.ipynb) for an improved version that also visualizes the original `.obj` mesh alongside the point cloud, making the results easier to interpret.
 
 ## License
 MIT License
